@@ -54,26 +54,36 @@ npx ap1ph3x test     # self-test
 
 ## API Registry
 
-ap1ph3x ships with a curated registry of 31+ public APIs:
+ap1ph3x ships with a curated registry of 1779+ public APIs across 53 categories:
 
 ```typescript
 import { getFreeAPIs, getX402APIs, getSelfHostableAPIs } from 'ap1ph3x';
 
-getFreeAPIs();         // 17 free APIs (no key, no payment)
-getX402APIs();         // 2 x402-compatible paid APIs
-getSelfHostableAPIs(); // 10 self-hostable (privacy-first)
+getFreeAPIs();         // 739 free APIs APIs (no key, no payment)
+getX402APIs();         // x402-compatible paid APIs-compatible paid APIs
+getSelfHostableAPIs(); // self-hostable (privacy-first)-hostable (privacy-first)
 ```
 
-### Categories
+### Categories (53 total, 1779+ APIs)
 
 | Category | Count | Examples |
 |---|---|---|
-| Search | 5 | Exa, DuckDuckGo, Wikipedia, OpenAlex, SearXNG |
-| Crypto | 8 | CoinGecko, DefiLlama, Etherscan, CMC, RPC endpoints |
-| AI | 4 | HuggingFace, Ollama, OpenRouter, LocalAI |
-| Social | 5 | Nansen, Hacker News, Reddit, Mastodon, RSS-Bridge |
-| Developer | 6 | GitHub, GitLab, npm, PyPI, DNS, httpbin |
-| Weather/Location | 3 | Open-Meteo, Nominatim, OSRM |
+| AI Agents | 200 | Adala, AgentForge, AgentGPT, AgentPilot |
+| Development | 133 | GitHub, GitLab, npm, PyPI, DNS, httpbin |
+| Games & Comics | 97 | Steam, Riot Games, Pokémon, Hearthstone |
+| Government | 97 | US Census, EU Open Data, FBI, FDA |
+| Geocoding | 92 | OpenStreetMap, Google Maps, Mapbox |
+| Transportation | 74 | FAA, NYC Subway, Transit, BTS |
+| Cryptocurrency | 69 | CoinGecko, DefiLlama, Etherscan, Binance |
+| Finance | 53 | Alpha Vantage, FRED, IMF, World Bank |
+| Open Data | 45 | Wikipedia, Data.gov, OpenCorporates |
+| Video | 45 | YouTube, Vimeo, Dailymotion, TED |
+| Social | 43 | Reddit, Mastodon, Telegram, Discord |
+| Security | 42 | VirusTotal, HaveIBeenPwned, SecurityTrails |
+| Machine Learning | 30 | HuggingFace, OpenAI, Vertex AI, Clarifai |
+| Weather | 33 | Open-Meteo, NOAA, OpenWeatherMap |
+| Music | 34 | Spotify, Last.fm, MusicBrainz, Deezer |
+| + 38 more categories | — | Blockchain, Health, News, Science, Email... |
 
 ## Architecture
 
@@ -93,7 +103,7 @@ getSelfHostableAPIs(); // 10 self-hostable (privacy-first)
 │  │          └──────────┘            │    │
 │  └─────────────────────────────────┘    │
 │  ┌─────────────────────────────────┐    │
-│  │       API Registry (31+)        │    │
+│  │     API Registry (1779+)      │    │
 │  │  search|crypto|ai|social|dev|... │    │
 │  └─────────────────────────────────┘    │
 └─────────────────────────────────────────┘
