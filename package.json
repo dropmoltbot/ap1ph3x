@@ -1,0 +1,52 @@
+{
+  "name": "@anthropic-ai/agentpay",
+  "version": "0.1.0",
+  "description": "Open-source payment client for AI agents — x402 + MPP, multi-chain, zero custodial risk",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "agentpay": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "node --test dist/test.js",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "x402",
+    "mpp",
+    "ai-agent",
+    "payments",
+    "usdc",
+    "base",
+    "tempo",
+    "eip-712",
+    "open-source",
+    "privacy",
+    "autonomous",
+    "http-402",
+    "machine-payments"
+  ],
+  "license": "MIT",
+  "author": "dropxtor <dropxtor@proton.me>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dropmoltbot/agentpay"
+  },
+  "homepage": "https://github.com/dropmoltbot/agentpay",
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "@types/node": "^22.0.0"
+  }
+}
