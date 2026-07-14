@@ -1,20 +1,20 @@
-# 💀 ap1ph3
+# 💀 ap1ph3x
 
 **The payment protocol that never dies.**
 
 Open-source x402 + MPP client for AI agents. Multi-chain. Zero custody. 31+ public API registry included.
 
 ```
-npm install ap1ph3
+npm install ap1ph3x
 ```
 
-![ap1ph3](assets/agentpay-logo.svg)
+![ap1ph3x](assets/agentpay-logo.svg)
 
 ---
 
-## Why ap1ph3?
+## Why ap1ph3x?
 
-| Normal Payment SDKs | ap1ph3 |
+| Normal Payment SDKs | ap1ph3x |
 |---|---|
 | Proprietary lock-in | MIT, open-source forever |
 | Single chain | 6 chains (Base, ETH, Tempo, Polygon, Monad, BSC) |
@@ -26,16 +26,16 @@ npm install ap1ph3
 ## Quick Start
 
 ```typescript
-import { Ap1ph3 } from 'ap1ph3';
+import { Ap1ph3x } from 'ap1ph3x';
 
-const pay = new Ap1ph3({
+const pay = new Ap1ph3x({
   privateKey: process.env.PRIVATE_KEY as `0x${string}`,
   chain: 'base',
   maxPerCall: 0.01,  // USDC
   maxPerDay: 10.00,  // USDC
 });
 
-// fetch a paid API endpoint — ap1ph3 handles the 402 flow automatically
+// fetch a paid API endpoint — ap1ph3x handles the 402 flow automatically
 const data = await pay.fetch('https://api.exa.ai/search', {
   method: 'POST',
   body: { query: 'machine payments' },
@@ -47,17 +47,17 @@ console.log(data);  // ✅ response body + payment receipt
 ## CLI
 
 ```bash
-npx ap1ph3 fetch https://api.exa.ai/search --method POST --body '{"query":"test"}'
-npx ap1ph3 wallet   # show wallet info
-npx ap1ph3 test     # self-test
+npx ap1ph3x fetch https://api.exa.ai/search --method POST --body '{"query":"test"}'
+npx ap1ph3x wallet   # show wallet info
+npx ap1ph3x test     # self-test
 ```
 
 ## API Registry
 
-ap1ph3 ships with a curated registry of 31+ public APIs:
+ap1ph3x ships with a curated registry of 31+ public APIs:
 
 ```typescript
-import { getFreeAPIs, getX402APIs, getSelfHostableAPIs } from 'ap1ph3';
+import { getFreeAPIs, getX402APIs, getSelfHostableAPIs } from 'ap1ph3x';
 
 getFreeAPIs();         // 17 free APIs (no key, no payment)
 getX402APIs();         // 2 x402-compatible paid APIs
@@ -79,9 +79,9 @@ getSelfHostableAPIs(); // 10 self-hostable (privacy-first)
 
 ```
 ┌─────────────────────────────────────────┐
-│            ap1ph3                     │
+│            ap1ph3x                     │
 │  ┌─────────────────────────────────┐    │
-│  │         Ap1ph3 (main)         │    │
+│  │         Ap1ph3x (main)         │    │
 │  │   ┌──────────┐ ┌──────────────┐  │    │
 │  │   │ X402     │ │  MPP         │  │    │
 │  │   │ Client   │ │  Client      │  │    │
@@ -117,7 +117,7 @@ MIT — Dropxtor (@0xDropxtor)
 ## Links
 
 - **GitHub**: [github.com/dropmoltbot/agentpay](https://github.com/dropmoltbot/agentpay)
-- **npm**: `npm install ap1ph3`
+- **npm**: `npm install ap1ph3x`
 
 ```
   ┌─┐ ┌─┐
