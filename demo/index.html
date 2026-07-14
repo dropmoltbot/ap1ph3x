@@ -7,909 +7,432 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🔐%3C/text%3E%3C/svg%3E" />
   <link href="https://fonts.googleapis.com/css2?family=VT323&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    
-    :root {
-      --phos: #00ff41;
-      --phos-dim: #00cc33;
-      --phos-dark: #006611;
-      --bg: #000a00;
-      --bg-dark: #000500;
-      --amber: #f6851b;
-      --red: #ff4040;
-      --blue: #6496ff;
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{--phos:#00ff41;--phos-dim:#00cc33;--phos-dark:#006611;--bg:#000a00;--bg-dark:#000500;--amber:#f6851b;--red:#ff4040;--blue:#6496ff}
+    body{background:var(--bg-dark);color:var(--phos);font-family:'JetBrains Mono',monospace;min-height:100vh}
+    .crt-screen{position:fixed;inset:0;background:var(--bg);overflow-y:auto}
+    .crt-screen::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0.08) 0,rgba(0,0,0,0.08) 1px,transparent 1px,transparent 3px);pointer-events:none;z-index:9999}
+    .crt-screen::after{content:'';position:fixed;inset:0;background:rgba(0,255,65,0.015);pointer-events:none;z-index:9998;animation:fk .15s infinite}
+    @keyframes fk{0%,100%{opacity:1}50%{opacity:.96}73%{opacity:.99}}
+    .vignette{position:fixed;inset:0;background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,.4) 100%);pointer-events:none;z-index:9997}
+    .scan-beam{position:fixed;left:0;right:0;height:4px;background:var(--phos);opacity:.06;pointer-events:none;z-index:9996;animation:sc 6s linear infinite}
+    @keyframes sc{0%{top:0}100%{top:100vh}}
+    .container{max-width:960px;margin:0 auto;padding:16px 20px 40px}
+    .header{text-align:center;padding:16px 0;border-bottom:1px solid var(--phos-dark);margin-bottom:16px}
+    .header h1{font-family:'VT323',monospace;font-size:2.5rem;text-shadow:0 0 10px var(--phos-dim);letter-spacing:3px;animation:gl 2s ease-in-out infinite}
+    @keyframes gl{0%,100%{text-shadow:0 0 10px var(--phos-dim)}50%{text-shadow:0 0 20px var(--phos),0 0 30px var(--phos-dim)}}
+    .header .tagline{font-size:.78rem;opacity:.6;margin-top:4px}
+    .header .stats{display:flex;justify-content:center;gap:10px;margin-top:8px;flex-wrap:wrap}
+    .stat{font-size:.68rem;opacity:.5;padding:3px 10px;border:1px solid var(--phos-dark);border-radius:3px}
+    .stat strong{color:var(--phos);opacity:1}
+    .tabs{display:flex;gap:2px;margin-bottom:16px;border-bottom:2px solid var(--phos-dark);flex-wrap:wrap}
+    .tab{padding:8px 16px;background:transparent;color:var(--phos-dim);border:none;border-bottom:2px solid transparent;cursor:pointer;font-family:inherit;font-size:.82rem;transition:all .2s;margin-bottom:-2px}
+    .tab:hover{color:var(--phos)}
+    .tab.active{color:var(--phos);border-bottom-color:var(--phos);text-shadow:0 0 8px var(--phos-dim)}
+    .panel{display:none}
+    .panel.active{display:block}
+    .wallet-bar{display:flex;gap:10px;align-items:center;justify-content:center;margin-bottom:14px;font-size:.7rem;flex-wrap:wrap}
+    .wallet-bar .item{padding:4px 10px;border:1px solid var(--phos-dark);border-radius:3px;opacity:.7}
+    .wallet-bar .item strong{color:var(--phos)}
+    .wallet-bar .item.amber strong{color:var(--amber)}
+    /* Chat */
+    .chat{min-height:300px;max-height:60vh;overflow-y:auto;padding:8px 0}
+    .msg{margin-bottom:14px;animation:fi .3s ease}
+    @keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .msg-user{text-align:right}
+    .msg-user .bubble{background:rgba(0,255,65,.06);border:1px solid var(--phos-dark);padding:10px 16px;border-radius:8px 8px 0 8px;display:inline-block;max-width:80%;text-align:left;font-size:.88rem}
+    .msg-agent .bubble{font-size:.84rem;line-height:1.6}
+    .msg-agent .who{color:var(--amber);font-size:.68rem;margin-bottom:4px}
+    .agent-step{display:flex;gap:10px;align-items:flex-start;padding:6px 0;opacity:0;animation:si .3s forwards;font-size:.78rem}
+    @keyframes si{to{opacity:1}}
+    .agent-step .icon{min-width:20px;text-align:center}
+    .agent-step .text{flex:1;line-height:1.5}
+    .agent-step .text .label{color:var(--phos-dim)}
+    .agent-step .text .detail{opacity:.7;font-size:.73rem;word-break:break-all}
+    .agent-step.search .icon{color:var(--blue)}
+    .agent-step.pay .icon,.agent-step.sign .icon{color:var(--amber)}
+    .agent-step.fetch .icon{color:var(--phos)}
+    .agent-step.done .icon{color:var(--phos)}
+    .agent-step.error .icon{color:var(--red)}
+    .agent-step.pay .text{color:var(--amber)}
+    .agent-step.error .text{color:var(--red)}
+    .agent-step.done .text{color:var(--phos)}
+    .result-card{background:rgba(0,255,65,.04);border:1px solid var(--phos);border-radius:8px;padding:16px;margin-top:12px;animation:fi .5s ease}
+    .result-card .rh{font-size:.72rem;color:var(--phos-dim);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+    .result-card .rd{font-size:.88rem;line-height:1.6;color:var(--phos)}
+    .result-card .rd strong{font-weight:700}
+    .result-card .rr{margin-top:12px;padding-top:12px;border-top:1px solid var(--phos-dark);font-size:.68rem;opacity:.6;display:flex;gap:14px;flex-wrap:wrap}
+    .result-card .rr .ri{display:flex;gap:4px}
+    .input-area{padding:12px 0 4px;border-top:1px solid var(--phos-dark)}
+    .input-row{display:flex;gap:10px}
+    .input-row input{flex:1;background:var(--bg-dark);border:1px solid var(--phos-dark);color:var(--phos);padding:12px 16px;font-family:inherit;font-size:.88rem;outline:none;border-radius:4px}
+    .input-row input:focus{border-color:var(--phos);box-shadow:0 0 8px rgba(0,255,65,.15)}
+    .input-row button{background:rgba(0,255,65,.1);border:1px solid var(--phos);color:var(--phos);padding:12px 24px;font-family:inherit;font-size:.82rem;cursor:pointer;border-radius:4px;transition:all .2s;text-transform:uppercase;letter-spacing:1px}
+    .input-row button:hover{background:rgba(0,255,65,.2);box-shadow:0 0 12px rgba(0,255,65,.2)}
+    .input-row button:disabled{opacity:.3;cursor:not-allowed}
+    .suggestions{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+    .suggestion{background:transparent;border:1px solid var(--phos-dark);color:var(--phos-dim);padding:6px 12px;font-family:inherit;font-size:.73rem;cursor:pointer;border-radius:3px;transition:all .2s}
+    .suggestion:hover{border-color:var(--phos);color:var(--phos);background:rgba(0,255,65,.05)}
+    .terminal-output{background:var(--bg-dark);border:1px solid var(--phos-dark);border-radius:4px;padding:10px 14px;margin-top:10px;font-size:.7rem;line-height:1.5;max-height:160px;overflow-y:auto;display:none}
+    .terminal-output.visible{display:block}
+    .terminal-output .tl{opacity:0;animation:ti .05s forwards}
+    @keyframes ti{to{opacity:1}}
+    .terminal-output .prompt{color:var(--phos-dim)}
+    .terminal-output .ok{color:var(--phos)}
+    .terminal-output .err{color:var(--red)}
+    .terminal-output .warn{color:var(--amber)}
+    .terminal-output .dim{opacity:.5}
+    .cursor{display:inline-block;width:7px;height:12px;background:var(--phos);animation:bl 1s steps(2) infinite;vertical-align:text-bottom}
+    @keyframes bl{0%,100%{opacity:1}50%{opacity:0}}
+    /* Registry */
+    .search-bar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+    .search-bar input{flex:1;min-width:200px;background:var(--bg-dark);border:1px solid var(--phos-dark);color:var(--phos);padding:10px 14px;font-family:inherit;font-size:.85rem;outline:none;border-radius:3px}
+    .search-bar input:focus{border-color:var(--phos);box-shadow:0 0 8px rgba(0,255,65,.1)}
+    .search-bar select{background:var(--bg-dark);border:1px solid var(--phos-dark);color:var(--phos);padding:10px 14px;font-family:inherit;font-size:.82rem;outline:none;border-radius:3px;cursor:pointer}
+    .api-grid{display:grid;gap:6px}
+    .api-card{background:rgba(0,255,65,.03);border:1px solid var(--phos-dark);padding:10px 14px;border-radius:4px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:10px}
+    .api-card:hover{border-color:var(--phos);background:rgba(0,255,65,.06);box-shadow:0 0 12px rgba(0,255,65,.1)}
+    .api-card .name{font-weight:700;font-size:.88rem;min-width:160px}
+    .api-card .desc{font-size:.72rem;opacity:.6;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .api-card .ab{font-size:.62rem;padding:2px 8px;border-radius:3px;white-space:nowrap;font-weight:700}
+    .ab-none{background:rgba(0,255,65,.15);color:var(--phos)}
+    .ab-apikey{background:rgba(246,133,27,.15);color:var(--amber)}
+    .ab-oauth{background:rgba(100,150,255,.15);color:var(--blue)}
+    .ab-opensource{background:rgba(255,64,64,.15);color:var(--red)}
+    .api-card .cb{font-size:.62rem;opacity:.4;white-space:nowrap}
+    .pagination{display:flex;justify-content:center;gap:10px;margin-top:16px;align-items:center}
+    .pagination button{background:transparent;border:1px solid var(--phos-dark);color:var(--phos);padding:6px 14px;font-family:inherit;cursor:pointer;border-radius:3px;font-size:.78rem}
+    .pagination button:hover{background:rgba(0,255,65,.1);border-color:var(--phos)}
+    .pagination button:disabled{opacity:.3;cursor:not-allowed}
+    .pagination .info{font-size:.72rem;opacity:.5}
+    /* Wallet */
+    .box{background:rgba(0,255,65,.03);border:1px solid var(--phos-dark);border-radius:6px;padding:20px;margin-bottom:14px}
+    .box h3{font-size:.95rem;margin-bottom:14px;color:var(--phos)}
+    .field{display:flex;gap:10px;margin-bottom:10px;align-items:center}
+    .field label{font-size:.73rem;opacity:.5;min-width:100px}
+    .field input,.field select{flex:1;background:var(--bg-dark);border:1px solid var(--phos-dark);color:var(--phos);padding:8px 12px;font-family:inherit;font-size:.82rem;outline:none;border-radius:3px}
+    .field input:focus,.field select:focus{border-color:var(--phos)}
+    .btn{background:rgba(0,255,65,.1);border:1px solid var(--phos);color:var(--phos);padding:10px 22px;font-family:inherit;font-size:.82rem;cursor:pointer;border-radius:4px;transition:all .2s;text-transform:uppercase;letter-spacing:1px}
+    .btn:hover{background:rgba(0,255,65,.2);box-shadow:0 0 12px rgba(0,255,65,.2)}
+    .btn:active{transform:scale(.98)}
+    .btn-amber{border-color:var(--amber);color:var(--amber);background:rgba(246,133,27,.1)}
+    .btn-amber:hover{background:rgba(246,133,27,.2);box-shadow:0 0 12px rgba(246,133,27,.2)}
+    .term{background:var(--bg-dark);border:1px solid var(--phos-dark);border-radius:6px;padding:14px;font-size:.78rem;line-height:1.7;min-height:160px;max-height:400px;overflow-y:auto;margin-top:12px}
+    .term .tl{opacity:0;animation:ti .08s forwards}
+    .term .prompt{color:var(--phos-dim)}
+    .term .ok{color:var(--phos)}
+    .term .err{color:var(--red)}
+    .term .warn{color:var(--amber)}
+    .term .dim{opacity:.5}
+    /* Payment flow */
+    .flow-step{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(0,255,65,.1);opacity:0;transform:translateX(-10px);animation:fin .3s forwards}
+    @keyframes fin{to{opacity:1;transform:translateX(0)}}
+    .flow-step .num{font-family:'VT323',monospace;font-size:1.4rem;color:var(--phos-dim);min-width:28px}
+    .flow-step .content{flex:1}
+    .flow-step .title{font-size:.82rem;font-weight:700;margin-bottom:4px}
+    .flow-step .detail{font-size:.72rem;opacity:.6;word-break:break-all}
+    .flow-step.pending .num{color:var(--amber)}
+    .flow-step.success .num,.flow-step.success .title{color:var(--phos)}
+    .flow-step.error .num{color:var(--red)}
+    /* Stats */
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:20px}
+    .stat-card{background:rgba(0,255,65,.03);border:1px solid var(--phos-dark);padding:14px;border-radius:6px;text-align:center}
+    .stat-card .n{font-family:'VT323',monospace;font-size:2rem;text-shadow:0 0 8px var(--phos-dim)}
+    .stat-card .l{font-size:.66rem;opacity:.5;margin-top:4px;text-transform:uppercase;letter-spacing:1px}
+    .cat-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px;margin-bottom:14px}
+    .cat-item{display:flex;justify-content:space-between;padding:8px 12px;background:rgba(0,255,65,.02);border:1px solid var(--phos-dark);border-radius:4px;font-size:.78rem;cursor:pointer;transition:all .2s}
+    .cat-item:hover{border-color:var(--phos);background:rgba(0,255,65,.06)}
+    .cat-item .count{opacity:.5;font-weight:700}
+    @media(max-width:600px){
+      .header h1{font-size:1.8rem}
+      .msg-user .bubble{max-width:95%}
+      .input-row{flex-direction:column}
+      .input-row button{width:100%}
+      .api-card{flex-direction:column;align-items:flex-start;gap:4px}
+      .api-card .name{min-width:auto}
+      .api-card .desc{white-space:normal}
+      .stats-grid{grid-template-columns:repeat(2,1fr)}
     }
-    
-    body {
-      background: var(--bg-dark);
-      color: var(--phos);
-      font-family: 'JetBrains Mono', monospace;
-      min-height: 100vh;
-    }
-    
-    .crt-screen {
-      position: fixed;
-      inset: 0;
-      background: var(--bg);
-      overflow-y: auto;
-    }
-    
-    .crt-screen::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: repeating-linear-gradient(0deg, rgba(0,0,0,0.08) 0px, rgba(0,0,0,0.08) 1px, transparent 1px, transparent 3px);
-      pointer-events: none;
-      z-index: 9999;
-    }
-    
-    .crt-screen::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 255, 65, 0.015);
-      pointer-events: none;
-      z-index: 9998;
-      animation: flicker 0.15s infinite;
-    }
-    
-    @keyframes flicker {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.96; }
-    }
-    
-    .vignette {
-      position: fixed; inset: 0;
-      background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.4) 100%);
-      pointer-events: none; z-index: 9997;
-    }
-    
-    .scan-beam {
-      position: fixed; left: 0; right: 0;
-      height: 4px; background: var(--phos);
-      opacity: 0.06; pointer-events: none;
-      z-index: 9996; animation: scan 6s linear infinite;
-    }
-    
-    @keyframes scan {
-      0% { top: 0; }
-      100% { top: 100vh; }
-    }
-    
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 20px;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    
-    /* Header */
-    .header {
-      text-align: center;
-      padding: 20px 0;
-      border-bottom: 1px solid var(--phos-dark);
-      margin-bottom: 20px;
-      flex-shrink: 0;
-    }
-    
-    .header h1 {
-      font-family: 'VT323', monospace;
-      font-size: 2.5rem;
-      color: var(--phos);
-      text-shadow: 0 0 10px var(--phos-dim);
-      letter-spacing: 3px;
-    }
-    
-    .header .tagline {
-      font-size: 0.8rem;
-      opacity: 0.6;
-      margin-top: 4px;
-    }
-    
-    .header .stats {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin-top: 10px;
-      flex-wrap: wrap;
-    }
-    
-    .stat {
-      font-size: 0.7rem;
-      opacity: 0.5;
-      padding: 3px 10px;
-      border: 1px solid var(--phos-dark);
-      border-radius: 3px;
-    }
-    
-    .stat strong { color: var(--phos); opacity: 1; }
-    
-    /* Chat area */
-    .chat {
-      flex: 1;
-      overflow-y: auto;
-      padding: 10px 0;
-      min-height: 300px;
-    }
-    
-    .msg {
-      margin-bottom: 16px;
-      animation: fadeIn 0.3s ease;
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .msg-user {
-      text-align: right;
-    }
-    
-    .msg-user .bubble {
-      background: rgba(0, 255, 65, 0.06);
-      border: 1px solid var(--phos-dark);
-      padding: 10px 16px;
-      border-radius: 8px 8px 0 8px;
-      display: inline-block;
-      max-width: 80%;
-      text-align: left;
-      font-size: 0.9rem;
-    }
-    
-    .msg-agent .bubble {
-      font-size: 0.85rem;
-      line-height: 1.6;
-    }
-    
-    .msg-agent .who {
-      color: var(--amber);
-      font-size: 0.7rem;
-      margin-bottom: 4px;
-    }
-    
-    /* Agent thinking */
-    .thinking {
-      display: inline-block;
-      animation: dots 1.4s infinite;
-    }
-    
-    @keyframes dots {
-      0%, 20% { content: '.'; }
-      40% { content: '..'; }
-      60%, 100% { content: '...'; }
-    }
-    
-    /* Agent steps */
-    .agent-step {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-      padding: 8px 0;
-      opacity: 0;
-      animation: stepIn 0.3s forwards;
-      font-size: 0.8rem;
-    }
-    
-    @keyframes stepIn {
-      to { opacity: 1; }
-    }
-    
-    .agent-step .icon {
-      min-width: 20px;
-      text-align: center;
-    }
-    
-    .agent-step .text {
-      flex: 1;
-      line-height: 1.5;
-    }
-    
-    .agent-step .text .label {
-      color: var(--phos-dim);
-    }
-    
-    .agent-step .text .detail {
-      opacity: 0.7;
-      font-size: 0.75rem;
-      word-break: break-all;
-    }
-    
-    .agent-step.search .icon { color: var(--blue); }
-    .agent-step.pay .icon { color: var(--amber); }
-    .agent-step.sign .icon { color: var(--amber); }
-    .agent-step.fetch .icon { color: var(--phos); }
-    .agent-step.done .icon { color: var(--phos); }
-    .agent-step.error .icon { color: var(--red); }
-    
-    .agent-step.pay .text { color: var(--amber); }
-    .agent-step.error .text { color: var(--red); }
-    .agent-step.done .text { color: var(--phos); }
-    
-    /* Result card */
-    .result-card {
-      background: rgba(0, 255, 65, 0.04);
-      border: 1px solid var(--phos);
-      border-radius: 8px;
-      padding: 16px;
-      margin-top: 12px;
-      animation: fadeIn 0.5s ease;
-    }
-    
-    .result-card .result-header {
-      font-size: 0.75rem;
-      color: var(--phos-dim);
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    
-    .result-card .result-data {
-      font-size: 0.9rem;
-      line-height: 1.6;
-      color: var(--phos);
-    }
-    
-    .result-card .result-data strong {
-      font-weight: 700;
-    }
-    
-    .result-card .payment-receipt {
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px solid var(--phos-dark);
-      font-size: 0.7rem;
-      opacity: 0.6;
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-    
-    .result-card .payment-receipt .receipt-item {
-      display: flex;
-      gap: 4px;
-    }
-    
-    .result-card .payment-receipt .receipt-item span:first-child {
-      opacity: 0.5;
-    }
-    
-    /* Input area */
-    .input-area {
-      flex-shrink: 0;
-      padding: 16px 0 10px;
-      border-top: 1px solid var(--phos-dark);
-    }
-    
-    .input-row {
-      display: flex;
-      gap: 10px;
-    }
-    
-    .input-row input {
-      flex: 1;
-      background: var(--bg-dark);
-      border: 1px solid var(--phos-dark);
-      color: var(--phos);
-      padding: 12px 16px;
-      font-family: inherit;
-      font-size: 0.9rem;
-      outline: none;
-      border-radius: 4px;
-    }
-    
-    .input-row input:focus {
-      border-color: var(--phos);
-      box-shadow: 0 0 8px rgba(0, 255, 65, 0.15);
-    }
-    
-    .input-row button {
-      background: rgba(0, 255, 65, 0.1);
-      border: 1px solid var(--phos);
-      color: var(--phos);
-      padding: 12px 24px;
-      font-family: inherit;
-      font-size: 0.85rem;
-      cursor: pointer;
-      border-radius: 4px;
-      transition: all 0.2s;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    
-    .input-row button:hover {
-      background: rgba(0, 255, 65, 0.2);
-      box-shadow: 0 0 12px rgba(0, 255, 65, 0.2);
-    }
-    
-    .input-row button:disabled {
-      opacity: 0.3;
-      cursor: not-allowed;
-    }
-    
-    /* Suggestions */
-    .suggestions {
-      display: flex;
-      gap: 8px;
-      margin-top: 10px;
-      flex-wrap: wrap;
-    }
-    
-    .suggestion {
-      background: transparent;
-      border: 1px solid var(--phos-dark);
-      color: var(--phos-dim);
-      padding: 6px 14px;
-      font-family: inherit;
-      font-size: 0.75rem;
-      cursor: pointer;
-      border-radius: 3px;
-      transition: all 0.2s;
-    }
-    
-    .suggestion:hover {
-      border-color: var(--phos);
-      color: var(--phos);
-      background: rgba(0, 255, 65, 0.05);
-    }
-    
-    /* Terminal output */
-    .terminal-output {
-      background: var(--bg-dark);
-      border: 1px solid var(--phos-dark);
-      border-radius: 4px;
-      padding: 10px 14px;
-      margin-top: 10px;
-      font-size: 0.72rem;
-      line-height: 1.5;
-      max-height: 180px;
-      overflow-y: auto;
-      display: none;
-    }
-    
-    .terminal-output.visible {
-      display: block;
-    }
-    
-    .terminal-output .term-line {
-      opacity: 0;
-      animation: termIn 0.05s forwards;
-    }
-    
-    @keyframes termIn {
-      to { opacity: 1; }
-    }
-    
-    .terminal-output .prompt { color: var(--phos-dim); }
-    .terminal-output .ok { color: var(--phos); }
-    .terminal-output .err { color: var(--red); }
-    .terminal-output .warn { color: var(--amber); }
-    .terminal-output .dim { opacity: 0.5; }
-    
-    .cursor {
-      display: inline-block;
-      width: 7px; height: 12px;
-      background: var(--phos);
-      animation: blink 1s steps(2) infinite;
-      vertical-align: text-bottom;
-    }
-    
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
-    }
-    
-    /* Wallet bar */
-    .wallet-bar {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 16px;
-      font-size: 0.72rem;
-      flex-wrap: wrap;
-    }
-    
-    .wallet-bar .item {
-      padding: 4px 12px;
-      border: 1px solid var(--phos-dark);
-      border-radius: 3px;
-      opacity: 0.7;
-    }
-    
-    .wallet-bar .item strong {
-      color: var(--phos);
-    }
-    
-    .wallet-bar .item.amber strong {
-      color: var(--amber);
-    }
-    
-    /* Responsive */
-    @media (max-width: 600px) {
-      .header h1 { font-size: 1.8rem; }
-      .msg-user .bubble { max-width: 95%; }
-      .input-row { flex-direction: column; }
-      .input-row button { width: 100%; }
-    }
-    
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg-dark); }
-    ::-webkit-scrollbar-thumb { background: var(--phos-dark); border-radius: 3px; }
+    ::-webkit-scrollbar{width:6px}
+    ::-webkit-scrollbar-track{background:var(--bg-dark)}
+    ::-webkit-scrollbar-thumb{background:var(--phos-dark);border-radius:3px}
   </style>
 </head>
 <body>
   <div class="crt-screen">
     <div class="vignette"></div>
     <div class="scan-beam"></div>
-    
     <div class="container">
-      <!-- Header -->
       <div class="header">
         <h1>🔐 ap1ph3x</h1>
         <div class="tagline">The encrypted payment protocol for AI agents</div>
         <div class="stats">
           <div class="stat"><strong>1779</strong> APIs</div>
+          <div class="stat"><strong>53</strong> Cats</div>
           <div class="stat"><strong>739</strong> Free</div>
-          <div class="stat"><strong>53</strong> Categories</div>
           <div class="stat"><strong>6</strong> Chains</div>
+          <div class="stat"><strong>2</strong> Protocols</div>
         </div>
       </div>
-      
-      <!-- Wallet bar -->
-      <div class="wallet-bar">
-        <div class="item">Chain: <strong>Base</strong></div>
-        <div class="item">Wallet: <strong>0xe987...1f9c</strong></div>
-        <div class="item amber">USDC: <strong>$4.98</strong></div>
-        <div class="item">Cap: <strong>$0.01</strong>/call</div>
-        <div class="item">Protocol: <strong>x402+MPP</strong></div>
+      <div class="tabs">
+        <button class="tab active" data-tab="agent">🤖 Agent</button>
+        <button class="tab" data-tab="registry">📦 Registry</button>
+        <button class="tab" data-tab="wallet">👛 Wallet</button>
+        <button class="tab" data-tab="payment">💳 Payment</button>
+        <button class="tab" data-tab="stats">📊 Stats</button>
       </div>
-      
-      <!-- Chat -->
-      <div class="chat" id="chat">
-        <div class="msg msg-agent">
-          <div class="who">ap1ph3x agent</div>
-          <div class="bubble">
-            🔐 Agent initialized. I can search 1779 APIs, pay for premium endpoints, and fetch data for you.
-            <br><br>
-            Try asking me something — I'll find the right API, handle the payment, and return the data.
+
+      <!-- ═══ AGENT ═══ -->
+      <div class="panel active" id="panel-agent">
+        <div class="wallet-bar">
+          <div class="item">Chain: <strong>Base</strong></div>
+          <div class="item">Wallet: <strong>0xe987...1f9c</strong></div>
+          <div class="item amber">USDC: <strong>$4.98</strong></div>
+          <div class="item">Cap: <strong>$0.01</strong>/call</div>
+          <div class="item">Protocol: <strong>x402+MPP</strong></div>
+        </div>
+        <div class="chat" id="chat">
+          <div class="msg msg-agent"><div class="who">ap1ph3x agent</div><div class="bubble">🔐 Agent initialized. I can search 1779 APIs, pay for premium endpoints, and fetch data for you.<br><br>Try asking me something — I'll find the right API, handle the payment, and return the data.</div></div>
+        </div>
+        <div class="terminal-output" id="terminal"></div>
+        <div class="input-area">
+          <div class="input-row">
+            <input type="text" id="input" placeholder="Ask the agent... (e.g. 'What's the price of Bitcoin?')" autocomplete="off" />
+            <button id="send">⚡ Execute</button>
+          </div>
+          <div class="suggestions">
+            <button class="suggestion" data-q="What is the price of Bitcoin?">₿ BTC price</button>
+            <button class="suggestion" data-q="Tell me a cat fact">🐱 Cat fact</button>
+            <button class="suggestion" data-q="What's trending on Hacker News?">📰 Hacker News</button>
+            <button class="suggestion" data-q="Give me a random dog image">🐶 Dog image</button>
+            <button class="suggestion" data-q="What's the DeFi TVL across all chains?">📊 DeFi TVL</button>
+            <button class="suggestion" data-q="Show me the ap1ph3x GitHub repo">📦 GitHub repo</button>
           </div>
         </div>
       </div>
-      
-      <!-- Terminal output -->
-      <div class="terminal-output" id="terminal"></div>
-      
-      <!-- Input -->
-      <div class="input-area">
-        <div class="input-row">
-          <input type="text" id="input" placeholder="Ask the agent anything... (e.g. 'What's the price of Bitcoin?')" autocomplete="off" />
-          <button id="send">⚡ Execute</button>
+
+      <!-- ═══ REGISTRY ═══ -->
+      <div class="panel" id="panel-registry">
+        <div class="search-bar">
+          <input type="text" id="search-input" placeholder="Search 1779 APIs... (e.g. crypto, ai, weather)" />
+          <select id="category-filter"><option value="">All categories</option></select>
+          <select id="auth-filter">
+            <option value="">All auth</option>
+            <option value="none">Free (no auth)</option>
+            <option value="apikey">API Key</option>
+            <option value="oauth">OAuth</option>
+            <option value="opensource">Open Source</option>
+          </select>
         </div>
-        <div class="suggestions">
-          <button class="suggestion" data-q="What is the price of Bitcoin?">₿ BTC price</button>
-          <button class="suggestion" data-q="Tell me a cat fact">🐱 Cat fact</button>
-          <button class="suggestion" data-q="What's the weather in Berlin?">🌤️ Weather Berlin</button>
-          <button class="suggestion" data-q="What's trending on Hacker News?">📰 Hacker News</button>
-          <button class="suggestion" data-q="Give me a random dog image">🐶 Dog image</button>
-          <button class="suggestion" data-q="What's the DeFi TVL across all chains?">📊 DeFi TVL</button>
+        <div class="api-grid" id="api-grid"></div>
+        <div class="pagination" id="pagination"></div>
+      </div>
+
+      <!-- ═══ WALLET ═══ -->
+      <div class="panel" id="panel-wallet">
+        <div class="box">
+          <h3>⚡ Wallet Configuration</h3>
+          <div class="field"><label>Chain</label><select id="wallet-chain"><option value="base">Base (8453)</option><option value="ethereum">Ethereum (1)</option><option value="tempo">Tempo (5042)</option><option value="polygon">Polygon (137)</option><option value="monad">Monad Testnet (10143)</option><option value="bsc">BSC (56)</option></select></div>
+          <div class="field"><label>Max / call</label><input type="number" id="wallet-max-call" value="0.01" step="0.001" min="0" /> USDC</div>
+          <div class="field"><label>Max / day</label><input type="number" id="wallet-max-day" value="10.00" step="0.5" min="0" /> USDC</div>
+          <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn" id="wallet-init">⚡ Init Wallet</button>
+            <button class="btn btn-amber" id="wallet-export">📋 Export Config</button>
+          </div>
         </div>
+        <div class="term" id="wallet-terminal"><div class="tl dim">&gt; Waiting for wallet initialization...</div><span class="cursor"></span></div>
+      </div>
+
+      <!-- ═══ PAYMENT ═══ -->
+      <div class="panel" id="panel-payment">
+        <div class="box">
+          <h3>💳 Payment Flow Simulation</h3>
+          <div class="field"><label>API URL</label><input type="text" id="pay-url" value="https://api.exa.ai/search" /></div>
+          <div class="field"><label>Method</label><select id="pay-method"><option value="GET">GET</option><option value="POST">POST</option></select></div>
+          <div class="field"><label>Protocol</label><select id="pay-protocol"><option value="auto">Auto-detect</option><option value="x402">x402</option><option value="mpp">MPP</option></select></div>
+          <div class="field"><label>Amount</label><input type="number" id="pay-amount" value="0.01" step="0.001" /> USDC</div>
+          <div style="margin-top:14px"><button class="btn" id="pay-execute">🚀 Execute Payment</button></div>
+        </div>
+        <div id="payment-flow"></div>
+        <div class="term" id="payment-terminal" style="margin-top:12px"></div>
+      </div>
+
+      <!-- ═══ STATS ═══ -->
+      <div class="panel" id="panel-stats">
+        <div class="stats-grid" id="stats-grid"></div>
+        <h3 style="margin-bottom:10px;font-size:.88rem;opacity:.7">📂 Categories (53)</h3>
+        <div class="cat-list" id="cat-list"></div>
       </div>
     </div>
   </div>
 
-  <script>
-    // ═══ AGENT BRAIN ═══
-    // Maps user queries to API endpoints in the registry
-    
-    const API_REGISTRY = [
-      // Free APIs (no payment needed)
-      {
-        id: 'coingecko-price',
-        name: 'CoinGecko',
-        category: 'cryptocurrency',
-        url: 'https://api.coingecko.com/api/v3/simple/price',
-        authMethod: 'none',
-        paid: false,
-        keywords: ['bitcoin', 'btc', 'ethereum', 'eth', 'crypto', 'price', 'token', 'coin'],
-        buildUrl: (q) => {
-          const coin = q.match(/bitcoin|btc/i) ? 'bitcoin' : q.match(/ethereum|eth/i) ? 'ethereum' : 'bitcoin';
-          return `https://api.coingecko.com/api/v3/simple/price?ids=${coin}&vs_currencies=usd,eur`;
-        },
-        parse: (data, q) => {
-          const coin = q.match(/bitcoin|btc/i) ? 'bitcoin' : q.match(/ethereum|eth/i) ? 'ethereum' : 'bitcoin';
-          const price = data[coin]?.usd;
-          const eur = data[coin]?.eur;
-          return `<strong>${coin.charAt(0).toUpperCase() + coin.slice(1)}</strong> is currently trading at <strong>$${price.toLocaleString()}</strong> USD (${eur?.toLocaleString()} EUR).`;
-        }
-      },
-      {
-        id: 'cat-facts',
-        name: 'Cat Facts API',
-        category: 'animals',
-        url: 'https://catfact.ninja/fact',
-        authMethod: 'none',
-        paid: false,
-        keywords: ['cat', 'fact', 'cats', 'random'],
-        buildUrl: () => 'https://catfact.ninja/fact',
-        parse: (data) => `🐱 <strong>Cat Fact:</strong> ${data.fact}`
-      },
-      {
-        id: 'defillama-tvl',
-        name: 'DefiLlama',
-        category: 'cryptocurrency',
-        url: 'https://api.llama.fi/v2/chains',
-        authMethod: 'none',
-        paid: false,
-        keywords: ['defi', 'tvl', 'total value', 'locked', 'chains', 'protocol'],
-        buildUrl: () => 'https://api.llama.fi/v2/chains',
-        parse: (data) => {
-          const total = data.reduce((s, c) => s + (c.tvl || 0), 0);
-          const top = data.sort((a, b) => (b.tvl || 0) - (a.tvl || 0)).slice(0, 5);
-          let html = `📊 <strong>Total DeFi TVL:</strong> $${(total / 1e9).toFixed(2)}B across ${data.length} chains<br><br><strong>Top 5:</strong><br>`;
-          top.forEach((c, i) => {
-            html += `${i + 1}. ${c.name}: $${((c.tvl || 0) / 1e9).toFixed(2)}B<br>`;
-          });
-          return html;
-        }
-      },
-      {
-        id: 'hn-top',
-        name: 'Hacker News API',
-        category: 'social',
-        url: 'https://hacker-news.firebaseio.com/v0/topstories.json',
-        authMethod: 'none',
-        paid: false,
-        keywords: ['hacker news', 'hn', 'trending', 'news', 'tech news', 'top stories'],
-        buildUrl: () => 'https://hacker-news.firebaseio.com/v0/topstories.json',
-        parse: async (data) => {
-          // Fetch top 5 story details
-          const stories = [];
-          for (const id of data.slice(0, 5)) {
-            try {
-              const res = await fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`);
-              const story = await res.json();
-              stories.push(story);
-            } catch (e) {}
-          }
-          let html = '📰 <strong>Top 5 Hacker News stories:</strong><br><br>';
-          stories.forEach((s, i) => {
-            html += `${i + 1}. <a href="${s.url || 'https://news.ycombinator.com/item?id=' + s.id}" target="_blank" style="color:var(--phos)">${s.title}</a> <span style="opacity:0.5">(${s.score} points)</span><br>`;
-          });
-          return html;
-        }
-      },
-      {
-        id: 'dog-ceo',
-        name: 'Dog CEO',
-        category: 'animals',
-        url: 'https://dog.ceo/api/breeds/image/random',
-        authMethod: 'none',
-        paid: false,
-        keywords: ['dog', 'doggo', 'puppy', 'random dog', 'dog image', 'woof'],
-        buildUrl: () => 'https://dog.ceo/api/breeds/image/random',
-        parse: (data) => `🐶 <strong>Here's a random doggo!</strong><br><br><img src="${data.message}" style="max-width:300px;border-radius:8px;border:1px solid var(--phos-dark);margin-top:8px" />`
-      },
-      {
-        id: 'bored',
-        name: 'Bored API',
-        category: 'entertainment',
-        url: 'https://www.boredapi.com/api/activity',
-        authMethod: 'none',
-        paid: false,
-        keywords: ['bored', 'activity', 'something to do', 'fun', 'random activity'],
-        buildUrl: () => 'https://www.boredapi.com/api/activity',
-        parse: (data) => `🎯 <strong>Activity:</strong> ${data.activity}<br><span style="opacity:0.6">Type: ${data.type} | Participants: ${data.participants}</span>`
-      },
-      {
-        id: 'useless-fact',
-        name: 'Useless Facts',
-        category: 'open-data',
-        url: 'https://uselessfacts.jsph.pl/api/v2/facts/random',
-        authMethod: 'none',
-        paid: false,
-        keywords: ['fact', 'useless', 'random fact', 'trivia', 'did you know'],
-        buildUrl: () => 'https://uselessfacts.jsph.pl/api/v2/facts/random',
-        parse: (data) => `💡 <strong>Useless Fact:</strong> ${data.text}`
-      },
-      {
-        id: 'github-repo',
-        name: 'GitHub API',
-        category: 'development',
-        url: 'https://api.github.com/repos/dropmoltbot/ap1ph3x',
-        authMethod: 'none',
-        paid: false,
-        keywords: ['github', 'repo', 'repository', 'stars', 'forks', 'ap1ph3x repo'],
-        buildUrl: () => 'https://api.github.com/repos/dropmoltbot/ap1ph3x',
-        parse: (data) => `📦 <strong>${data.full_name}</strong><br><br>${data.description}<br><br>⭐ ${data.stargazers_count} stars | 🍴 ${data.forks_count} forks | 📝 ${data.language}<br><a href="${data.html_url}" target="_blank" style="color:var(--phos)">${data.html_url}</a>`
-      },
-      // Simulated paid APIs (x402)
-      {
-        id: 'exa-search',
-        name: 'Exa AI Search (x402)',
-        category: 'search',
-        url: 'https://api.exa.ai/search',
-        authMethod: 'x402',
-        paid: true,
-        cost: 0.01,
-        keywords: ['search', 'web search', 'find', 'research', 'look up', 'google'],
-        buildUrl: () => 'https://api.exa.ai/search',
-        parse: (data) => `🔍 <strong>Exa Search Results (paid 0.01 USDC via x402):</strong><br><br>${data || 'Simulated results — would return real web search data.'}`
-      },
-      {
-        id: 'nansen-smart',
-        name: 'Nansen Smart Money (MPP)',
-        category: 'social',
-        url: 'https://api.nansen.ai/api/v1/smart-money/netflow',
-        authMethod: 'mpp',
-        paid: true,
-        cost: 0.05,
-        keywords: ['smart money', 'nansen', 'whale', 'on-chain', 'netflow', 'institutional'],
-        buildUrl: () => 'https://api.nansen.ai/api/v1/smart-money/netflow',
-        parse: (data) => `🐋 <strong>Nansen Smart Money (paid 0.05 USDC via MPP):</strong><br><br>${data || 'Simulated results — would return real smart money flow data.'}`
-      },
-    ];
-    
-    // ═══ AGENT LOGIC ═══
-    
-    function findAPI(query) {
-      const q = query.toLowerCase();
-      let best = null;
-      let bestScore = 0;
-      
-      for (const api of API_REGISTRY) {
-        let score = 0;
-        for (const kw of api.keywords) {
-          if (q.includes(kw)) score += kw.split(' ').length; // longer keywords score higher
-        }
-        if (score > bestScore) {
-          bestScore = score;
-          best = api;
-        }
-      }
-      
-      return best;
-    }
-    
-    function addMsg(text, isUser = false) {
-      const chat = document.getElementById('chat');
-      const msg = document.createElement('div');
-      msg.className = isUser ? 'msg msg-user' : 'msg msg-agent';
-      if (isUser) {
-        msg.innerHTML = `<div class="bubble">${text}</div>`;
-      } else {
-        msg.innerHTML = `<div class="who">ap1ph3x agent</div><div class="bubble">${text}</div>`;
-      }
-      chat.appendChild(msg);
-      chat.scrollTop = chat.scrollHeight;
-      return msg;
-    }
-    
-    function addStep(type, icon, label, detail, delay = 0) {
-      return new Promise(resolve => {
-        setTimeout(() => {
-          const chat = document.getElementById('chat');
-          const lastMsg = chat.lastElementChild;
-          const bubble = lastMsg.querySelector('.bubble');
-          
-          const step = document.createElement('div');
-          step.className = `agent-step ${type}`;
-          step.innerHTML = `<div class="icon">${icon}</div><div class="text"><div class="label">${label}</div><div class="detail">${detail}</div></div>`;
-          bubble.appendChild(step);
-          chat.scrollTop = chat.scrollHeight;
-          resolve();
-        }, delay);
-      });
-    }
-    
-    function addTerminal(text, cls = 'dim') {
-      const term = document.getElementById('terminal');
-      term.classList.add('visible');
-      const line = document.createElement('div');
-      line.className = `term-line ${cls}`;
-      line.textContent = text;
-      term.appendChild(line);
-      term.scrollTop = term.scrollHeight;
-    }
-    
-    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-    
-    // Generate mock EIP-712 signature
-    function mockSignature() {
-      return '0x' + Array.from({ length: 130 }, () => '0123456789abcdef'[Math.floor(Math.random() * 16)]).join('');
-    }
-    
-    // Generate mock tx hash
-    function mockTxHash() {
-      return '0x' + Array.from({ length: 64 }, () => '0123456789abcdef'[Math.floor(Math.random() * 16)]).join('');
-    }
-    
-    async function executeAgent(query) {
-      const input = document.getElementById('input');
-      const sendBtn = document.getElementById('send');
-      input.disabled = true;
-      sendBtn.disabled = true;
-      
-      // Add user message
-      addMsg(query, true);
-      
-      // Add agent message container
-      addMsg('');
-      const chat = document.getElementById('chat');
-      const bubble = chat.lastElementChild.querySelector('.bubble');
-      
-      // Step 1: Think
-      await sleep(200);
-      bubble.innerHTML = '<span class="thinking">Analyzing request</span>';
-      await sleep(800);
-      bubble.innerHTML = '';
-      
-      // Step 2: Find API
-      const api = findAPI(query);
-      
-      if (!api) {
-        await addStep('error', '❌', 'No matching API found', `Query "${query}" did not match any of the 1779 APIs in the registry`);
-        bubble.innerHTML += `<br><br>I couldn't find an API for that. Try: Bitcoin price, cat facts, weather, Hacker News, DeFi TVL, dog image...`;
-        input.disabled = false;
-        sendBtn.disabled = false;
-        input.value = '';
-        input.focus();
-        return;
-      }
-      
-      // Step 2: Found API
-      await addStep('search', '🔍', `Found API: ${api.name}`, `Category: ${api.category} | Auth: ${api.authMethod} | URL: ${api.url}`);
-      addTerminal(`> registry.search("${query}")`, 'prompt');
-      addTerminal(`  → matched: ${api.name} (score: ${api.keywords.filter(k => query.toLowerCase().includes(k)).length})`, 'ok');
-      await sleep(400);
-      
-      // Step 3: Check if payment needed
-      const url = api.buildUrl(query);
-      
-      if (api.paid) {
-        // ═══ PAID FLOW — x402 or MPP ═══
-        await addStep('pay', '💳', `402 Payment Required`, `Server demands payment: ${api.cost} USDC via ${api.authMethod.toUpperCase()}`);
-        addTerminal(`> ${url}`, 'prompt');
-        addTerminal(`⚠ 402 Payment Required — ${api.cost} USDC (${api.authMethod})`, 'warn');
-        await sleep(600);
-        
-        // Step 4: Check spend cap
-        await addStep('sign', '✍️', `Signing EIP-712 payment`, `Amount: ${api.cost} USDC | Chain: Base (8453) | Protocol: ${api.authMethod}`);
-        addTerminal(`> checking spend cap: ${api.cost} ≤ $0.01/call...`, 'dim');
-        await sleep(400);
-        
-        if (api.cost > 0.01) {
-          await addStep('error', '❌', `Spend cap exceeded`, `${api.cost} USDC > $0.01/call cap — payment BLOCKED`);
-          addTerminal(`❌ Spend cap exceeded — payment blocked`, 'err');
-          bubble.innerHTML += `<br><br>⚠ Payment blocked: the API costs ${api.cost} USDC but the spend cap is $0.01/call. Increase the cap to use this endpoint.`;
-          input.disabled = false;
-          sendBtn.disabled = false;
-          input.value = '';
-          input.focus();
-          return;
-        }
-        
-        addTerminal(`✅ Within spend cap`, 'ok');
-        await sleep(300);
-        
-        // Step 5: Sign
-        const sig = mockSignature();
-        await addStep('sign', '🔑', `EIP-712 signature generated`, `sig: ${sig.slice(0, 20)}...${sig.slice(-8)}`);
-        addTerminal(`> signEIP712({ amount: ${api.cost}, recipient: merchant })`, 'prompt');
-        addTerminal(`  → sig: ${sig.slice(0, 42)}...`, 'ok');
-        await sleep(500);
-        
-        // Step 6: Retry with payment
-        await addStep('fetch', '📡', `Retrying with payment`, `Authorization: EIP-712 signature attached`);
-        addTerminal(`> retry ${url} with payment header`, 'prompt');
-        await sleep(600);
-        
-      } else {
-        // ═══ FREE FLOW — no payment ═══
-        await addStep('fetch', '📡', `Fetching (free API)`, `No payment needed — authMethod: none`);
-        addTerminal(`> GET ${url}`, 'prompt');
-        addTerminal(`  → free API, no payment required`, 'ok');
-        await sleep(400);
-      }
-      
-      // Step 7: Fetch data
-      try {
-        const res = await fetch(url);
-        const status = res.status;
-        
-        if (status !== 200) {
-          await addStep('error', '❌', `HTTP ${status}`, `Request failed`);
-          addTerminal(`❌ HTTP ${status}`, 'err');
-          bubble.innerHTML += `<br><br>Request failed with status ${status}.`;
-          input.disabled = false;
-          sendBtn.disabled = false;
-          input.value = '';
-          input.focus();
-          return;
-        }
-        
-        const data = await res.json();
-        await addStep('done', '✅', `200 OK — Data received`, `Status: ${status} | Size: ${JSON.stringify(data).length} bytes`);
-        addTerminal(`✅ 200 OK — ${JSON.stringify(data).length} bytes received`, 'ok');
-        await sleep(400);
-        
-        // Step 8: Parse and display
-        const parsed = await api.parse(data, query);
-        
-        // Build result card
-        const card = document.createElement('div');
-        card.className = 'result-card';
-        
-        let receiptHtml = '';
-        if (api.paid) {
-          const txHash = mockTxHash();
-          receiptHtml = `
-            <div class="payment-receipt">
-              <div class="receipt-item"><span>💸 Paid:</span><span>${api.cost} USDC</span></div>
-              <div class="receipt-item"><span>🔗 Protocol:</span><span>${api.authMethod.toUpperCase()}</span></div>
-              <div class="receipt-item"><span>⛓️ Chain:</span><span>Base (8453)</span></div>
-              <div class="receipt-item"><span>📝 TX:</span><span>${txHash.slice(0, 18)}...</span></div>
-              <div class="receipt-item"><span>✅ Status:</span><span>SETTLED</span></div>
-            </div>`;
-        } else {
-          receiptHtml = `
-            <div class="payment-receipt">
-              <div class="receipt-item"><span>💸 Cost:</span><span>FREE</span></div>
-              <div class="receipt-item"><span>🔑 Auth:</span><span>none</span></div>
-              <div class="receipt-item"><span>📦 API:</span><span>${api.name}</span></div>
-              <div class="receipt-item"><span>📊 Category:</span><span>${api.category}</span></div>
-            </div>`;
-        }
-        
-        card.innerHTML = `
-          <div class="result-header">📡 Result from ${api.name}</div>
-          <div class="result-data">${parsed}</div>
-          ${receiptHtml}
-        `;
-        
-        bubble.appendChild(card);
-        chat.scrollTop = chat.scrollHeight;
-        
-        addTerminal(`> agent.respond()`, 'prompt');
-        addTerminal(`✅ Response delivered to user`, 'ok');
-        
-      } catch (err) {
-        await addStep('error', '❌', `Fetch error`, err.message);
-        addTerminal(`❌ ${err.message}`, 'err');
-        bubble.innerHTML += `<br><br>Network error: ${err.message}`;
-      }
-      
-      // Re-enable input
-      input.disabled = false;
-      sendBtn.disabled = false;
-      input.value = '';
-      input.focus();
-    }
-    
-    // ═══ EVENT LISTENERS ═══
-    document.getElementById('send').addEventListener('click', () => {
-      const q = document.getElementById('input').value.trim();
-      if (q) executeAgent(q);
-    });
-    
-    document.getElementById('input').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        const q = document.getElementById('input').value.trim();
-        if (q) executeAgent(q);
-      }
-    });
-    
-    document.querySelectorAll('.suggestion').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.getElementById('input').value = btn.dataset.q;
-        executeAgent(btn.dataset.q);
-      });
-    });
-    
-    // Focus input on load
-    document.getElementById('input').focus();
-  </script>
+<script>
+// ═══ DATA ═══
+const APIS=[
+{id:'coingecko-price',name:'CoinGecko',category:'cryptocurrency',url:'https://api.coingecko.com/api/v3/simple/price',authMethod:'none',keywords:['bitcoin','btc','ethereum','eth','crypto','price','token','coin'],buildUrl:q=>{const c=q.match(/bitcoin|btc/i)?'bitcoin':q.match(/ethereum|eth/i)?'ethereum':'bitcoin';return`https://api.coingecko.com/api/v3/simple/price?ids=${c}&vs_currencies=usd,eur`},parse:(d,q)=>{const c=q.match(/bitcoin|btc/i)?'bitcoin':q.match(/ethereum|eth/i)?'ethereum':'bitcoin';return`<strong>${c.charAt(0).toUpperCase()+c.slice(1)}</strong> is currently trading at <strong>$${d[c]?.usd.toLocaleString()}</strong> USD (${d[c]?.eur?.toLocaleString()} EUR).`}},
+{id:'cat-facts',name:'Cat Facts API',category:'animals',url:'https://catfact.ninja/fact',authMethod:'none',keywords:['cat','fact','cats','random'],buildUrl:()=>'https://catfact.ninja/fact',parse:d=>`🐱 <strong>Cat Fact:</strong> ${d.fact}`},
+{id:'defillama-tvl',name:'DefiLlama',category:'cryptocurrency',url:'https://api.llama.fi/v2/chains',authMethod:'none',keywords:['defi','tvl','total value','locked','chains','protocol'],buildUrl:()=>'https://api.llama.fi/v2/chains',parse:d=>{const t=d.reduce((s,c)=>s+(c.tvl||0),0);const top=d.sort((a,b)=>(b.tvl||0)-(a.tvl||0)).slice(0,5);let h=`📊 <strong>Total DeFi TVL:</strong> $${(t/1e9).toFixed(2)}B across ${d.length} chains<br><br><strong>Top 5:</strong><br>`;top.forEach((c,i)=>h+=`${i+1}. ${c.name}: $${((c.tvl||0)/1e9).toFixed(2)}B<br>`);return h}},
+{id:'hn-top',name:'Hacker News API',category:'social',url:'https://hacker-news.firebaseio.com/v0/topstories.json',authMethod:'none',keywords:['hacker news','hn','trending','news','tech news','top stories'],buildUrl:()=>'https://hacker-news.firebaseio.com/v0/topstories.json',parse:async d=>{const s=[];for(const id of d.slice(0,5)){try{const r=await fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`);const st=await r.json();s.push(st)}catch(e){}}let h='📰 <strong>Top 5 Hacker News stories:</strong><br><br>';s.forEach((s2,i)=>h+=`${i+1}. <a href="${s2.url||'https://news.ycombinator.com/item?id='+s2.id}" target="_blank" style="color:var(--phos)">${s2.title}</a> <span style="opacity:.5">(${s2.score} pts)</span><br>`);return h}},
+{id:'dog-ceo',name:'Dog CEO',category:'animals',url:'https://dog.ceo/api/breeds/image/random',authMethod:'none',keywords:['dog','doggo','puppy','random dog','dog image','woof'],buildUrl:()=>'https://dog.ceo/api/breeds/image/random',parse:d=>`🐶 <strong>Here's a random doggo!</strong><br><br><img src="${d.message}" style="max-width:300px;border-radius:8px;border:1px solid var(--phos-dark);margin-top:8px" />`},
+{id:'github-repo',name:'GitHub API',category:'development',url:'https://api.github.com/repos/dropmoltbot/ap1ph3x',authMethod:'none',keywords:['github','repo','repository','stars','forks','ap1ph3x repo'],buildUrl:()=>'https://api.github.com/repos/dropmoltbot/ap1ph3x',parse:d=>`📦 <strong>${d.full_name}</strong><br><br>${d.description}<br><br>⭐ ${d.stargazers_count} stars | 🍴 ${d.forks_count} forks | 📝 ${d.language}<br><a href="${d.html_url}" target="_blank" style="color:var(--phos)">${d.html_url}</a>`},
+{id:'exa-search',name:'Exa AI Search (x402)',category:'search',url:'https://api.exa.ai/search',authMethod:'x402',paid:true,cost:0.01,keywords:['search','web search','find','research','look up'],buildUrl:()=>'https://api.exa.ai/search',parse:d=>`🔍 <strong>Exa Search Results (paid 0.01 USDC via x402):</strong><br><br>Simulated — would return real web search data.`},
+{id:'nansen-smart',name:'Nansen Smart Money (MPP)',category:'social',url:'https://api.nansen.ai/smart-money',authMethod:'mpp',paid:true,cost:0.05,keywords:['smart money','nansen','whale','on-chain','netflow'],buildUrl:()=>'https://api.nansen.ai/smart-money',parse:d=>`🐋 <strong>Nansen Smart Money (paid 0.05 USDC via MPP):</strong><br><br>Simulated — would return real smart money flow data.`},
+// Registry-only entries (for browse tab)
+{id:'duckduckgo',name:'DuckDuckGo',category:'open-data',url:'https://api.duckduckgo.com/',authMethod:'none',description:'Free instant answer API. No key, no tracking'},
+{id:'wikipedia',name:'Wikipedia API',category:'open-data',url:'https://en.wikipedia.org/w/api.php',authMethod:'none',description:'Free Wikipedia article search and retrieval'},
+{id:'openalex',name:'OpenAlex',category:'open-data',url:'https://api.openalex.org',authMethod:'none',description:'Open catalog of 250M+ scholarly works'},
+{id:'searx',name:'SearXNG',category:'open-data',url:'https://searx.be/search',authMethod:'none',description:'Privacy-respecting metasearch. Self-hostable'},
+{id:'etherscan',name:'Etherscan',category:'cryptocurrency',url:'https://api.etherscan.io/api',authMethod:'apikey',description:'Ethereum blockchain data, transactions, contracts'},
+{id:'0x',name:'0x Protocol',category:'cryptocurrency',url:'https://0x.org/api',authMethod:'none',description:'Decentralized exchange protocol API'},
+{id:'1inch',name:'1inch',category:'cryptocurrency',url:'https://1inch.io/api',authMethod:'none',description:'DEX aggregator API for best swap rates'},
+{id:'alchemy-eth',name:'Alchemy Ethereum',category:'cryptocurrency',url:'https://docs.alchemy.com',authMethod:'apikey',description:'Ethereum node infrastructure API'},
+{id:'binance',name:'Binance',category:'cryptocurrency',url:'https://binance-docs.github.io/apidocs',authMethod:'apikey',description:'Crypto exchange trading data'},
+{id:'coinbase',name:'Coinbase',category:'cryptocurrency',url:'https://api.coinbase.com/v2',authMethod:'apikey',description:'Crypto exchange and wallet API'},
+{id:'kraken',name:'Kraken',category:'cryptocurrency',url:'https://api.kraken.com',authMethod:'apikey',description:'Crypto exchange market data'},
+{id:'bitfinex',name:'Bitfinex',category:'cryptocurrency',url:'https://api-pub.bitfinex.com/v2',authMethod:'none',description:'Crypto exchange ticker data'},
+{id:'coinpaprika',name:'Coinpaprika',category:'cryptocurrency',url:'https://api.coinpaprika.com/v1',authMethod:'none',description:'Crypto market data. Free, no key'},
+{id:'huggingface',name:'Hugging Face',category:'machine-learning',url:'https://api-inference.huggingface.co',authMethod:'apikey',description:'Free inference for 100K+ models. Text, image, audio'},
+{id:'ollama',name:'Ollama',category:'machine-learning',url:'http://localhost:11434/api',authMethod:'none',description:'Run LLMs locally. Open-source. Full privacy'},
+{id:'openrouter',name:'OpenRouter',category:'machine-learning',url:'https://openrouter.ai/api/v1',authMethod:'apikey',description:'Unified API for 200+ LLMs. Free models included'},
+{id:'localai',name:'LocalAI',category:'machine-learning',url:'http://localhost:8080/v1',authMethod:'none',description:'Self-hosted OpenAI-compatible API'},
+{id:'openai',name:'OpenAI',category:'machine-learning',url:'https://api.openai.com/v1',authMethod:'apikey',description:'GPT models, DALL-E, embeddings, whisper'},
+{id:'clarifai',name:'Clarifai',category:'machine-learning',url:'https://api.clarifai.com/v2',authMethod:'apikey',description:'Computer vision and NLP API'},
+{id:'github-api',name:'GitHub API',category:'development',url:'https://api.github.com',authMethod:'apikey',description:'GitHub repos, issues, PRs, users. 60/hr free'},
+{id:'gitlab-api',name:'GitLab API',category:'development',url:'https://gitlab.com/api/v4',authMethod:'apikey',description:'GitLab repos, CI/CD, issues'},
+{id:'npm-registry',name:'npm Registry',category:'development',url:'https://registry.npmjs.org',authMethod:'none',description:'npm package metadata, versions, dependencies'},
+{id:'pypi',name:'PyPI API',category:'development',url:'https://pypi.org/pypi',authMethod:'none',description:'Python package index metadata'},
+{id:'dns-json',name:'Google DNS',category:'development',url:'https://dns.google/resolve',authMethod:'none',description:'DNS resolution over HTTPS. Free'},
+{id:'httpbin',name:'httpbin',category:'development',url:'https://httpbin.org',authMethod:'none',description:'HTTP request/response testing. Free'},
+{id:'docker-hub',name:'Docker Hub',category:'development',url:'https://hub.docker.com/v2',authMethod:'none',description:'Docker container registry API'},
+{id:'hn-api-reg',name:'Hacker News',category:'social',url:'https://hacker-news.firebaseio.com/v0',authMethod:'none',description:'HN stories, comments, users. Free, no key'},
+{id:'reddit-api',name:'Reddit API',category:'social',url:'https://www.reddit.com',authMethod:'oauth',description:'Reddit posts, comments, subreddits'},
+{id:'mastodon',name:'Mastodon API',category:'social',url:'https://mastodon.social/api/v1',authMethod:'oauth',description:'Federated social network. Open-source'},
+{id:'rss-bridge',name:'RSS-Bridge',category:'social',url:'https://rss-bridge.org/bridge01/',authMethod:'none',description:'Generate RSS feeds from any site. Self-hostable'},
+{id:'open-meteo',name:'Open-Meteo',category:'weather',url:'https://api.open-meteo.com/v1',authMethod:'none',description:'Free weather API. No key. 10K calls/day'},
+{id:'nominatim',name:'OpenStreetMap',category:'geocoding',url:'https://nominatim.openstreetmap.org',authMethod:'none',description:'Geocoding, reverse geocoding. Free'},
+{id:'osrm',name:'OSRM',category:'geocoding',url:'https://router.project-osrm.org',authMethod:'none',description:'Routing API. Shortest path. Self-hostable'},
+{id:'alpha-vantage',name:'Alpha Vantage',category:'finance',url:'https://www.alphavantage.co/query',authMethod:'apikey',description:'Stock market data, forex, crypto. Free tier'},
+{id:'fred',name:'FRED',category:'finance',url:'https://api.stlouisfed.org/fred',authMethod:'apikey',description:'Federal Reserve economic data'},
+{id:'fixer',name:'Fixer.io',category:'currency-exchange',url:'https://data.fixer.io/api',authMethod:'apikey',description:'Foreign exchange rates API'},
+{id:'virustotal',name:'VirusTotal',category:'security',url:'https://www.virustotal.com/api/v3',authMethod:'apikey',description:'Malware and URL scanning'},
+{id:'haveibeenpwned',name:'HaveIBeenPwned',category:'security',url:'https://haveibeenpwned.com/api/v3',authMethod:'apikey',description:'Check if email has been breached'},
+{id:'us-census',name:'US Census',category:'government',url:'https://api.census.gov/data',authMethod:'apikey',description:'US Census demographic data'},
+{id:'data-gov',name:'Data.gov',category:'government',url:'https://catalog.data.gov/api/3',authMethod:'none',description:'US government open data. Free'},
+{id:'newsapi',name:'NewsAPI',category:'news',url:'https://newsapi.org/v2',authMethod:'apikey',description:'News headlines from 80K+ sources'},
+{id:'nyt',name:'NY Times',category:'news',url:'https://api.nytimes.com/svc',authMethod:'apikey',description:'New York Times articles and metadata'},
+{id:'spotify',name:'Spotify',category:'music',url:'https://api.spotify.com/v1',authMethod:'oauth',description:'Music streaming, playlists, tracks'},
+{id:'lastfm',name:'Last.fm',category:'music',url:'https://ws.audioscrobbler.com/2.0',authMethod:'apikey',description:'Music scrobbling and recommendations'},
+{id:'steam',name:'Steam',category:'games-and-comics',url:'https://api.steampowered.com',authMethod:'apikey',description:'Steam games, player stats, news'},
+{id:'pokeapi',name:'Pokémon API',category:'games-and-comics',url:'https://pokeapi.co/api/v2',authMethod:'none',description:'Pokémon data. Free, no key'},
+{id:'bored',name:'Bored API',category:'entertainment',url:'https://www.boredapi.com/api/activity',authMethod:'none',description:'Random activities when bored. Free'},
+{id:'useless-fact',name:'Useless Facts',category:'open-data',url:'https://uselessfacts.jsph.pl/api/v2/facts/random',authMethod:'none',description:'Random useless facts. Free'},
+{id:'dog-facts',name:'Dog Facts',category:'animals',url:'https://dukengn.github.io/Dog-facts-API',authMethod:'none',description:'Random dog facts. Free'},
+{id:'noaa',name:'NOAA',category:'weather',url:'https://www.ncdc.noaa.gov/cdo-web/api/v2',authMethod:'apikey',description:'US weather and climate data'},
+];
+const CHAINS={base:{name:'Base',chainId:8453,usdc:true,native:'ETH'},ethereum:{name:'Ethereum',chainId:1,usdc:true,native:'ETH'},tempo:{name:'Tempo',chainId:5042,usdc:true,native:'ETH'},polygon:{name:'Polygon',chainId:137,usdc:true,native:'MATIC'},monad:{name:'Monad Testnet',chainId:10143,usdc:false,native:'MON'},bsc:{name:'BSC',chainId:56,usdc:true,native:'BNB'}};
+
+// ═══ TABS ═══
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));t.classList.add('active');document.getElementById('panel-'+t.dataset.tab).classList.add('active')}));
+
+// ═══ AGENT ═══
+function findAPI(q){q=q.toLowerCase();let best=null,bs=0;for(const a of APIS){let s=0;for(const k of a.keywords||[])if(q.includes(k))s+=k.split(' ').length;if(s>bs)bs=s,best=a}return best}
+function addMsg(t,u=false){const c=document.getElementById('chat');const m=document.createElement('div');m.className=u?'msg msg-user':'msg msg-agent';m.innerHTML=u?`<div class="bubble">${t}</div>`:`<div class="who">ap1ph3x agent</div><div class="bubble">${t}</div>`;c.appendChild(m);c.scrollTop=c.scrollHeight;return m}
+function addStep(ty,ic,lb,dt,d=0){return new Promise(r=>setTimeout(()=>{const c=document.getElementById('chat');const b=c.lastElementChild.querySelector('.bubble');const s=document.createElement('div');s.className=`agent-step ${ty}`;s.innerHTML=`<div class="icon">${ic}</div><div class="text"><div class="label">${lb}</div><div class="detail">${dt}</div></div>`;b.appendChild(s);c.scrollTop=c.scrollHeight;r()},d))}
+function addTerm(t,c='dim'){const tm=document.getElementById('terminal');tm.classList.add('visible');const l=document.createElement('div');l.className=`tl ${c}`;l.textContent=t;tm.appendChild(l);tm.scrollTop=tm.scrollHeight}
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const mkSig=()=>'0x'+Array.from({length:130},()=>'0123456789abcdef'[Math.floor(Math.random()*16)]).join('');
+const mkTx=()=>'0x'+Array.from({length:64},()=>'0123456789abcdef'[Math.floor(Math.random()*16)]).join('');
+
+async function executeAgent(q){
+const inp=document.getElementById('input'),btn=document.getElementById('send');
+inp.disabled=true;btn.disabled=true;
+addMsg(q,true);
+addMsg('');
+const b=document.getElementById('chat').lastElementChild.querySelector('.bubble');
+await sleep(200);b.innerHTML='<span style="opacity:.5">Analyzing request...</span>';await sleep(600);b.innerHTML='';
+const api=findAPI(q);
+if(!api){addStep('error','❌','No matching API found',`Query "${q}" did not match any API`);b.innerHTML+=`<br><br>I couldn't find an API for that. Try: Bitcoin price, cat facts, Hacker News, DeFi TVL, dog image, GitHub repo...`;inp.disabled=false;btn.disabled=false;inp.value='';inp.focus();return}
+await addStep('search','🔍',`Found API: ${api.name}`,`Category: ${api.category} | Auth: ${api.authMethod} | URL: ${api.url}`);
+addTerm(`> registry.search("${q}")`,'prompt');addTerm(`  → matched: ${api.name}`,'ok');
+await sleep(400);
+const url=api.buildUrl?api.buildUrl(q):api.url;
+if(api.paid){
+await addStep('pay','💳','402 Payment Required',`${api.cost} USDC via ${api.authMethod.toUpperCase()}`);
+addTerm(`> ${url}`,'prompt');addTerm(`⚠ 402 Payment Required — ${api.cost} USDC`,'warn');await sleep(600);
+await addStep('sign','✍️','Signing EIP-712 payment',`Amount: ${api.cost} USDC | Chain: Base (8453) | Protocol: ${api.authMethod}`);
+addTerm(`> checking spend cap: ${api.cost} ≤ $0.01/call...`,'dim');
+await sleep(400);
+if(api.cost>0.01){addStep('error','❌','Spend cap exceeded',`${api.cost} USDC > $0.01/call cap — BLOCKED`);addTerm('❌ Spend cap exceeded — blocked','err');b.innerHTML+=`<br><br>⚠ Payment blocked: the API costs ${api.cost} USDC but the cap is $0.01/call.`;inp.disabled=false;btn.disabled=false;inp.value='';inp.focus();return}
+addTerm('✅ Within spend cap','ok');await sleep(300);
+const sig=mkSig();
+await addStep('sign','🔑','EIP-712 signature generated',`sig: ${sig.slice(0,20)}...${sig.slice(-8)}`);
+addTerm(`> signEIP712({ amount: ${api.cost} })`,'prompt');addTerm(`  → sig: ${sig.slice(0,42)}...`,'ok');await sleep(500);
+await addStep('fetch','📡','Retrying with payment','Authorization: EIP-712 signature attached');
+addTerm(`> retry with payment header`,'prompt');await sleep(600);
+}else{
+await addStep('fetch','📡','Fetching (free API)','No payment needed — authMethod: none');
+addTerm(`> GET ${url}`,'prompt');addTerm('  → free API, no payment','ok');await sleep(400)}
+try{
+const res=await fetch(url);
+if(res.status!==200){addStep('error','❌',`HTTP ${res.status}`,'Request failed');addTerm(`❌ HTTP ${res.status}`,'err');b.innerHTML+=`<br><br>Request failed.`;inp.disabled=false;btn.disabled=false;inp.value='';inp.focus();return}
+const data=await res.json();
+await addStep('done','✅',`200 OK — Data received`,`Size: ${JSON.stringify(data).length} bytes`);
+addTerm(`✅ 200 OK — ${JSON.stringify(data).length} bytes`,'ok');await sleep(400);
+const parsed=await api.parse(data,q);
+const card=document.createElement('div');
+card.className='result-card';
+let rh='';
+if(api.paid){const tx=mkTx();rh=`<div class="rr"><div class="ri"><span>💸 Paid:</span><span>${api.cost} USDC</span></div><div class="ri"><span>🔗 Protocol:</span><span>${api.authMethod.toUpperCase()}</span></div><div class="ri"><span>⛓️ Chain:</span><span>Base (8453)</span></div><div class="ri"><span>📝 TX:</span><span>${tx.slice(0,18)}...</span></div><div class="ri"><span>✅ Status:</span><span>SETTLED</span></div></div>`}
+else{rh=`<div class="rr"><div class="ri"><span>💸 Cost:</span><span>FREE</span></div><div class="ri"><span>🔑 Auth:</span><span>none</span></div><div class="ri"><span>📦 API:</span><span>${api.name}</span></div><div class="ri"><span>📊 Cat:</span><span>${api.category}</span></div></div>`}
+card.innerHTML=`<div class="rh">📡 Result from ${api.name}</div><div class="rd">${parsed}</div>${rh}`;
+b.appendChild(card);
+document.getElementById('chat').scrollTop=9999;
+addTerm('> agent.respond()','prompt');addTerm('✅ Response delivered','ok');
+}catch(err){addStep('error','❌','Fetch error',err.message);addTerm(`❌ ${err.message}`,'err');b.innerHTML+=`<br><br>Network error: ${err.message}`}
+inp.disabled=false;btn.disabled=false;inp.value='';inp.focus()}
+
+document.getElementById('send').addEventListener('click',()=>{const q=document.getElementById('input').value.trim();if(q)executeAgent(q)});
+document.getElementById('input').addEventListener('keydown',e=>{if(e.key==='Enter'){const q=document.getElementById('input').value.trim();if(q)executeAgent(q)}});
+document.querySelectorAll('.suggestion').forEach(b=>b.addEventListener('click',()=>{document.getElementById('input').value=b.dataset.q;executeAgent(b.dataset.q)}));
+
+// ═══ REGISTRY ═══
+let cp=1,pp=15,fa=[...APIS];
+function renderApis(){const g=document.getElementById('api-grid');const s=(cp-1)*pp;const pa=fa.slice(s,s+pp);g.innerHTML='';
+pa.forEach(a=>{const c=document.createElement('div');c.className='api-card';c.innerHTML=`<div class="name">${a.name}</div><div class="desc">${a.description||''}</div><div class="cb">${a.category}</div><div class="ab ab-${a.authMethod}">${a.authMethod==='none'?'FREE':a.authMethod.toUpperCase()}</div>`;c.addEventListener('click',()=>{navigator.clipboard?.writeText(a.url);c.style.borderColor='#00ff41';setTimeout(()=>c.style.borderColor='',400)});g.appendChild(c)});
+const tp=Math.ceil(fa.length/pp);
+document.getElementById('pagination').innerHTML=`<button onclick="window._pp()" ${cp===1?'disabled':''}>◀</button><span class="info">Page ${cp}/${tp} — ${fa.length} APIs</span><button onclick="window._np()" ${cp===tp?'disabled':''}>▶</button>`}
+window._pp=()=>{if(cp>1)cp--,renderApis()};
+window._np=()=>{const tp=Math.ceil(fa.length/pp);if(cp<tp)cp++,renderApis()};
+function filterApis(){const q=document.getElementById('search-input').value.toLowerCase();const cat=document.getElementById('category-filter').value;const auth=document.getElementById('auth-filter').value;
+fa=APIS.filter(a=>{const mq=!q||a.name.toLowerCase().includes(q)||(a.description||'').toLowerCase().includes(q)||a.category.toLowerCase().includes(q);const mc=!cat||a.category===cat;const ma=!auth||a.authMethod===auth;return mq&&mc&&ma});cp=1;renderApis()}
+document.getElementById('search-input').addEventListener('input',filterApis);
+document.getElementById('auth-filter').addEventListener('change',filterApis);
+const cf=document.getElementById('category-filter');[...new Set(APIS.map(a=>a.category))].sort().forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=`${c} (${APIS.filter(a=>a.category===c).length})`;cf.appendChild(o)});cf.addEventListener('change',filterApis);
+
+// ═══ WALLET ═══
+document.getElementById('wallet-init').addEventListener('click',()=>{
+const ch=document.getElementById('wallet-chain').value,mc=document.getElementById('wallet-max-call').value,md=document.getElementById('wallet-max-day').value,ci=CHAINS[ch];
+const addr='0x'+Array.from({length:40},()=>'0123456789abcdef'[Math.floor(Math.random()*16)]).join('');
+const t=document.getElementById('wallet-terminal');t.innerHTML='';
+[{t:'prompt',d:'> ap1ph3x.init({'},{t:'dim',d:`    chain: '${ch}',`},{t:'dim',d:`    chainId: ${ci.chainId},`},{t:'dim',d:`    native: '${ci.native}',`},{t:'dim',d:`    maxPerCall: ${mc},`},{t:'dim',d:`    maxPerDay: ${md},`},{t:'prompt',d:'  })'},{t:'',d:''},{t:'ok',d:'✅ Wallet initialized'},{t:'dim',d:`   Address: ${addr}`},{t:'dim',d:`   Chain: ${ci.name} (${ci.chainId})`},{t:'dim',d:`   USDC: ${ci.usdc?'✅ supported':'❌ not available'}`},{t:'dim',d:`   Cap: $${mc}/call, $${md}/day`},{t:'',d:''},{t:'ok',d:'✅ Zero custody — key never leaves process'},{t:'ok',d:'✅ x402 protocol ready'},{t:'ok',d:'✅ MPP protocol ready'},{t:'prompt',d:'> Ready.'}].forEach((l,i)=>{const d=document.createElement('div');d.className=`tl ${l.t}`;d.style.animationDelay=(i*.06)+'s';d.textContent=l.d;t.appendChild(d)});t.appendChild(Object.assign(document.createElement('span'),{className:'cursor'}))});
+document.getElementById('wallet-export').addEventListener('click',()=>{const ch=document.getElementById('wallet-chain').value,mc=document.getElementById('wallet-max-call').value,md=document.getElementById('wallet-max-day').value;navigator.clipboard?.writeText(`import { Ap1ph3x } from 'ap1ph3x';\n\nconst pay = new Ap1ph3x({\n  privateKey: process.env.PRIVATE_KEY,\n  chain: '${ch}',\n  maxPerCall: ${mc},\n  maxPerDay: ${md},\n});`);const t=document.getElementById('wallet-terminal');const d=document.createElement('div');d.className='tl ok';d.textContent='✅ Config copied to clipboard!';t.appendChild(d)});
+
+// ═══ PAYMENT ═══
+document.getElementById('pay-execute').addEventListener('click',async()=>{
+const url=document.getElementById('pay-url').value,m=document.getElementById('pay-method').value,pr=document.getElementById('pay-protocol').value,am=document.getElementById('pay-amount').value;
+const fe=document.getElementById('payment-flow'),te=document.getElementById('payment-terminal');fe.innerHTML='';te.innerHTML='';
+const steps=[{n:'1',t:'Request',d:`${m} ${url}`,s:'pending'},{n:'2',t:'402 Payment Required',d:'Server demands payment for access',s:'pending'},{n:'3',t:'Parse challenge',d:`Protocol: ${pr==='auto'?'x402 (auto-detected)':pr}`,s:'pending'},{n:'4',t:'Sign EIP-712',d:`Amount: ${am} USDC → signing with wallet key...`,s:'pending'},{n:'5',t:'Retry with payment',d:'Authorization: EIP-712 signature attached',s:'pending'},{n:'6',t:'200 OK',d:`Payment settled — ${am} USDC transferred`,s:'pending'}];
+for(let i=0;i<steps.length;i++){const s=steps[i];const d=document.createElement('div');d.className=`flow-step ${s.s}`;d.style.animationDelay=(i*.1)+'s';d.innerHTML=`<div class="num">${s.n}</div><div class="content"><div class="title">${s.t}</div><div class="detail">${s.d}</div></div>`;fe.appendChild(d);await sleep(500);d.classList.remove('pending');d.classList.add('success');
+const tl=document.createElement('div');tl.className='tl';const txts=[`> ${m} ${url}`,`⚠ 402 Payment Required`,`> parsing challenge... protocol: ${pr==='auto'?'x402':pr}`,`> signing EIP-712 TransferWithAuthorization...`,`> retry with payment header...`,`✅ 200 OK — payment settled (${am} USDC)`];tl.textContent=txts[i];if(i===1)tl.classList.add('warn');else if(i===5)tl.classList.add('ok');else if(i===0)tl.classList.add('prompt');else tl.classList.add('dim');te.appendChild(tl)}
+const sm=document.createElement('div');sm.className='tl ok';sm.textContent='═══ Payment complete ═══';te.appendChild(sm);
+const dt=document.createElement('div');dt.className='tl dim';dt.textContent=`   Amount: ${am} USDC | Protocol: ${pr==='auto'?'x402':pr} | Status: SETTLED`;te.appendChild(dt)});
+
+// ═══ STATS ═══
+function renderStats(){const g=document.getElementById('stats-grid');[{n:'1779',l:'Total APIs'},{n:'739',l:'Free APIs'},{n:'53',l:'Categories'},{n:'6',l:'Chains'},{n:'2',l:'Protocols'},{n:'78',l:'Open Source'},{n:'149',l:'OAuth APIs'},{n:'200',l:'AI Agents'}].forEach(s=>{const c=document.createElement('div');c.className='stat-card';c.innerHTML=`<div class="n">${s.n}</div><div class="l">${s.l}</div>`;g.appendChild(c)});
+const cl=document.getElementById('cat-list');const cc={};APIS.forEach(a=>cc[a.category]=(cc[a.category]||0)+1);Object.entries(cc).sort((a,b)=>b[1]-a[1]).forEach(([c,n])=>{const i=document.createElement('div');i.className='cat-item';i.innerHTML=`<span>${c}</span><span class="count">${n}</span>`;i.addEventListener('click',()=>{document.querySelector('.tab[data-tab="registry"]').click();document.getElementById('category-filter').value=c;filterApis()});cl.appendChild(i)})}
+
+// ═══ INIT ═══
+renderApis();renderStats();document.getElementById('input').focus();
+</script>
 </body>
 </html>
