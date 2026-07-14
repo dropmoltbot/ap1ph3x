@@ -175,7 +175,7 @@
   <g clip-path="url(#scr)" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="10" fill="url(#phosA)" filter="url(#fPhos)" text-anchor="middle" font-weight="bold">
     <text x="120" y="60">
       <animate attributeName="opacity" values="0.8;1;0.8;1;0.9" dur="0.12s" repeatCount="indefinite"/>
-      ⚡ AgentPay
+      ⚡ Ap1ph3x
     </text>
   </g>
 
@@ -183,7 +183,7 @@
   <g clip-path="url(#scr)" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="6.5" fill="#00ff41" filter="url(#fPhos)">
     <text x="28" y="82" opacity="0.65">
       <animate attributeName="opacity" values="0;0.65;0.65" dur="3s" repeatCount="indefinite"/>
-      &gt; init agentpay v0.1.0
+      &gt; init ap1ph3x v0.1.0
     </text>
     <text x="28" y="92" opacity="0.6">
       <animate attributeName="opacity" values="0;0;0.6;0.6" dur="3s" repeatCount="indefinite"/>

@@ -34,9 +34,9 @@
   "author": "dropxtor <dropxtor@proton.me>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dropmoltbot/agentpay.git"
+    "url": "https://github.com/dropmoltbot/ap1ph3x.git"
   },
-  "homepage": "https://github.com/dropxtor/ap1ph3x",
+  "homepage": "https://github.com/dropmoltbot/ap1ph3x#readme",
   "engines": {
     "node": ">=18"
   },

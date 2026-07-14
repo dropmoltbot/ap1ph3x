@@ -1,6 +1,6 @@
 /**
  * API Registry — Curated catalog of public, open-source, and free API endpoints
- * compatible with AgentPay's x402/MPP payment flow.
+ * compatible with ap1ph3x's x402/MPP payment flow.
  * 
  * These endpoints are organized by category and include:
  * - Free APIs (no payment needed)

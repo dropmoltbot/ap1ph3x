@@ -8,7 +8,7 @@ Open-source x402 + MPP client for AI agents. Multi-chain. Zero custody. 31+ publ
 npm install ap1ph3x
 ```
 
-![ap1ph3x](assets/agentpay-logo.svg)
+![ap1ph3x](assets/ap1ph3x-logo.svg)
 
 ---
 
@@ -116,7 +116,7 @@ MIT — Dropxtor (@0xDropxtor)
 
 ## Links
 
-- **GitHub**: [github.com/dropmoltbot/agentpay](https://github.com/dropmoltbot/agentpay)
+- **GitHub**: [github.com/dropmoltbot/ap1ph3x](https://github.com/dropmoltbot/ap1ph3x)
 - **npm**: `npm install ap1ph3x`
 
 ```
