@@ -1,6 +1,6 @@
-# 💀 ap1ph3x
+# 🔐 ap1ph3x
 
-**The payment protocol that never dies.**
+**API + Cipher + Hex. The encrypted payment protocol for AI agents.**
 
 Open-source x402 + MPP client for AI agents. Multi-chain. Zero custody. 31+ public API registry included.
 
@@ -120,13 +120,11 @@ MIT — Dropxtor (@0xDropxtor)
 - **npm**: `npm install ap1ph3x`
 
 ```
-  ┌─┐ ┌─┐
-  │N3│ │CR│
-  │ 0│ │ P│
-  │- │ │ A│
-  │  │ │ Y│
-  └─┘ └─┘
-  The payment protocol that never dies.
+  ┌──┐ ┌──┐ ┌──┐
+  │AP│ │1P│ │H3│
+  │  │ │  │ │ X│
+  └──┘ └──┘ └──┘
+  API + CIPHER + HEX
 ```
 
-💀 Built by [Dropxtor](https://github.com/dropmoltbot) · MIT License · 2026
+🔐 Built by [Dropxtor](https://github.com/dropmoltbot) · MIT License · 2026
