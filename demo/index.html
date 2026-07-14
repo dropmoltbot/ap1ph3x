@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🔐 ap1ph3x — Demo</title>
+  <title>🔐 ap1ph3x — Agent</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🔐%3C/text%3E%3C/svg%3E" />
   <link href="https://fonts.googleapis.com/css2?family=VT323&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
@@ -17,6 +17,7 @@
       --bg-dark: #000500;
       --amber: #f6851b;
       --red: #ff4040;
+      --blue: #6496ff;
     }
     
     body {
@@ -24,35 +25,24 @@
       color: var(--phos);
       font-family: 'JetBrains Mono', monospace;
       min-height: 100vh;
-      overflow-x: hidden;
     }
     
-    /* CRT screen */
     .crt-screen {
       position: fixed;
       inset: 0;
       background: var(--bg);
-      padding: 20px;
       overflow-y: auto;
     }
     
-    /* Scanlines */
     .crt-screen::before {
       content: '';
       position: fixed;
       inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        rgba(0,0,0,0.08) 0px,
-        rgba(0,0,0,0.08) 1px,
-        transparent 1px,
-        transparent 3px
-      );
+      background: repeating-linear-gradient(0deg, rgba(0,0,0,0.08) 0px, rgba(0,0,0,0.08) 1px, transparent 1px, transparent 3px);
       pointer-events: none;
       z-index: 9999;
     }
     
-    /* Flicker */
     .crt-screen::after {
       content: '';
       position: fixed;
@@ -66,28 +56,19 @@
     @keyframes flicker {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.96; }
-      73% { opacity: 0.99; }
     }
     
-    /* Vignette */
     .vignette {
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.4) 100%);
-      pointer-events: none;
-      z-index: 9997;
+      pointer-events: none; z-index: 9997;
     }
     
-    /* Moving scan beam */
     .scan-beam {
-      position: fixed;
-      left: 0; right: 0;
-      height: 4px;
-      background: var(--phos);
-      opacity: 0.06;
-      pointer-events: none;
-      z-index: 9996;
-      animation: scan 6s linear infinite;
+      position: fixed; left: 0; right: 0;
+      height: 4px; background: var(--phos);
+      opacity: 0.06; pointer-events: none;
+      z-index: 9996; animation: scan 6s linear infinite;
     }
     
     @keyframes scan {
@@ -95,298 +76,240 @@
       100% { top: 100vh; }
     }
     
-    /* Container */
     .container {
-      max-width: 1000px;
+      max-width: 900px;
       margin: 0 auto;
-      padding: 20px 0 60px;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
     
     /* Header */
     .header {
       text-align: center;
-      padding: 30px 0;
+      padding: 20px 0;
       border-bottom: 1px solid var(--phos-dark);
-      margin-bottom: 30px;
+      margin-bottom: 20px;
+      flex-shrink: 0;
     }
     
     .header h1 {
       font-family: 'VT323', monospace;
-      font-size: 3rem;
+      font-size: 2.5rem;
       color: var(--phos);
       text-shadow: 0 0 10px var(--phos-dim);
-      letter-spacing: 4px;
-      animation: glow 2s ease-in-out infinite;
-    }
-    
-    @keyframes glow {
-      0%, 100% { text-shadow: 0 0 10px var(--phos-dim); }
-      50% { text-shadow: 0 0 20px var(--phos), 0 0 30px var(--phos-dim); }
+      letter-spacing: 3px;
     }
     
     .header .tagline {
-      font-size: 0.85rem;
-      opacity: 0.7;
-      margin-top: 8px;
+      font-size: 0.8rem;
+      opacity: 0.6;
+      margin-top: 4px;
     }
     
     .header .stats {
       display: flex;
       justify-content: center;
-      gap: 20px;
-      margin-top: 15px;
+      gap: 12px;
+      margin-top: 10px;
       flex-wrap: wrap;
     }
     
     .stat {
-      font-size: 0.75rem;
-      opacity: 0.6;
-      padding: 4px 12px;
-      border: 1px solid var(--phos-dark);
-      border-radius: 3px;
-    }
-    
-    .stat strong {
-      color: var(--phos);
-      opacity: 1;
-    }
-    
-    /* Boot sequence */
-    .boot {
-      font-size: 0.8rem;
-      line-height: 1.6;
-      margin-bottom: 20px;
-      opacity: 0.7;
-    }
-    
-    .boot .line {
-      opacity: 0;
-      animation: bootIn 0.1s forwards;
-    }
-    
-    @keyframes bootIn {
-      to { opacity: 0.7; }
-    }
-    
-    /* Tabs */
-    .tabs {
-      display: flex;
-      gap: 2px;
-      margin-bottom: 20px;
-      border-bottom: 2px solid var(--phos-dark);
-    }
-    
-    .tab {
-      padding: 10px 20px;
-      background: transparent;
-      color: var(--phos-dim);
-      border: none;
-      border-bottom: 2px solid transparent;
-      cursor: pointer;
-      font-family: inherit;
-      font-size: 0.85rem;
-      transition: all 0.2s;
-      margin-bottom: -2px;
-    }
-    
-    .tab:hover {
-      color: var(--phos);
-    }
-    
-    .tab.active {
-      color: var(--phos);
-      border-bottom-color: var(--phos);
-      text-shadow: 0 0 8px var(--phos-dim);
-    }
-    
-    /* Panel */
-    .panel {
-      display: none;
-    }
-    
-    .panel.active {
-      display: block;
-    }
-    
-    /* Search */
-    .search-bar {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-    
-    .search-bar input {
-      flex: 1;
-      background: var(--bg-dark);
-      border: 1px solid var(--phos-dark);
-      color: var(--phos);
-      padding: 10px 14px;
-      font-family: inherit;
-      font-size: 0.9rem;
-      outline: none;
-      border-radius: 3px;
-    }
-    
-    .search-bar input:focus {
-      border-color: var(--phos);
-      box-shadow: 0 0 8px var(--phos-dim);
-    }
-    
-    .search-bar select {
-      background: var(--bg-dark);
-      border: 1px solid var(--phos-dark);
-      color: var(--phos);
-      padding: 10px 14px;
-      font-family: inherit;
-      font-size: 0.85rem;
-      outline: none;
-      border-radius: 3px;
-      cursor: pointer;
-    }
-    
-    /* API grid */
-    .api-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 8px;
-    }
-    
-    .api-card {
-      background: rgba(0, 255, 65, 0.03);
-      border: 1px solid var(--phos-dark);
-      padding: 12px 16px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    
-    .api-card:hover {
-      border-color: var(--phos);
-      background: rgba(0, 255, 65, 0.06);
-      box-shadow: 0 0 12px rgba(0, 255, 65, 0.1);
-    }
-    
-    .api-card .name {
-      font-weight: 700;
-      font-size: 0.9rem;
-      min-width: 180px;
-    }
-    
-    .api-card .desc {
-      font-size: 0.75rem;
-      opacity: 0.6;
-      flex: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    
-    .api-card .auth-badge {
-      font-size: 0.65rem;
-      padding: 2px 8px;
-      border-radius: 3px;
-      white-space: nowrap;
-      font-weight: 700;
-    }
-    
-    .auth-none { background: rgba(0,255,65,0.15); color: var(--phos); }
-    .auth-apikey { background: rgba(246,133,27,0.15); color: var(--amber); }
-    .auth-oauth { background: rgba(100,150,255,0.15); color: #6496ff; }
-    .auth-opensource { background: rgba(255,64,64,0.15); color: var(--red); }
-    
-    .api-card .cat-badge {
-      font-size: 0.65rem;
-      opacity: 0.4;
-      white-space: nowrap;
-    }
-    
-    /* Pagination */
-    .pagination {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 20px;
-      align-items: center;
-    }
-    
-    .pagination button {
-      background: transparent;
-      border: 1px solid var(--phos-dark);
-      color: var(--phos);
-      padding: 6px 14px;
-      font-family: inherit;
-      cursor: pointer;
-      border-radius: 3px;
-      font-size: 0.8rem;
-    }
-    
-    .pagination button:hover {
-      background: rgba(0,255,65,0.1);
-      border-color: var(--phos);
-    }
-    
-    .pagination button:disabled {
-      opacity: 0.3;
-      cursor: not-allowed;
-    }
-    
-    .pagination .info {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       opacity: 0.5;
-    }
-    
-    /* Wallet panel */
-    .wallet-box {
-      background: rgba(0,255,65,0.03);
+      padding: 3px 10px;
       border: 1px solid var(--phos-dark);
-      border-radius: 6px;
-      padding: 24px;
-      margin-bottom: 20px;
+      border-radius: 3px;
     }
     
-    .wallet-box h3 {
-      font-size: 1rem;
+    .stat strong { color: var(--phos); opacity: 1; }
+    
+    /* Chat area */
+    .chat {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px 0;
+      min-height: 300px;
+    }
+    
+    .msg {
       margin-bottom: 16px;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .msg-user {
+      text-align: right;
+    }
+    
+    .msg-user .bubble {
+      background: rgba(0, 255, 65, 0.06);
+      border: 1px solid var(--phos-dark);
+      padding: 10px 16px;
+      border-radius: 8px 8px 0 8px;
+      display: inline-block;
+      max-width: 80%;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+    
+    .msg-agent .bubble {
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+    
+    .msg-agent .who {
+      color: var(--amber);
+      font-size: 0.7rem;
+      margin-bottom: 4px;
+    }
+    
+    /* Agent thinking */
+    .thinking {
+      display: inline-block;
+      animation: dots 1.4s infinite;
+    }
+    
+    @keyframes dots {
+      0%, 20% { content: '.'; }
+      40% { content: '..'; }
+      60%, 100% { content: '...'; }
+    }
+    
+    /* Agent steps */
+    .agent-step {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 8px 0;
+      opacity: 0;
+      animation: stepIn 0.3s forwards;
+      font-size: 0.8rem;
+    }
+    
+    @keyframes stepIn {
+      to { opacity: 1; }
+    }
+    
+    .agent-step .icon {
+      min-width: 20px;
+      text-align: center;
+    }
+    
+    .agent-step .text {
+      flex: 1;
+      line-height: 1.5;
+    }
+    
+    .agent-step .text .label {
+      color: var(--phos-dim);
+    }
+    
+    .agent-step .text .detail {
+      opacity: 0.7;
+      font-size: 0.75rem;
+      word-break: break-all;
+    }
+    
+    .agent-step.search .icon { color: var(--blue); }
+    .agent-step.pay .icon { color: var(--amber); }
+    .agent-step.sign .icon { color: var(--amber); }
+    .agent-step.fetch .icon { color: var(--phos); }
+    .agent-step.done .icon { color: var(--phos); }
+    .agent-step.error .icon { color: var(--red); }
+    
+    .agent-step.pay .text { color: var(--amber); }
+    .agent-step.error .text { color: var(--red); }
+    .agent-step.done .text { color: var(--phos); }
+    
+    /* Result card */
+    .result-card {
+      background: rgba(0, 255, 65, 0.04);
+      border: 1px solid var(--phos);
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 12px;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    .result-card .result-header {
+      font-size: 0.75rem;
+      color: var(--phos-dim);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .result-card .result-data {
+      font-size: 0.9rem;
+      line-height: 1.6;
       color: var(--phos);
     }
     
-    .wallet-field {
+    .result-card .result-data strong {
+      font-weight: 700;
+    }
+    
+    .result-card .payment-receipt {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--phos-dark);
+      font-size: 0.7rem;
+      opacity: 0.6;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    
+    .result-card .payment-receipt .receipt-item {
+      display: flex;
+      gap: 4px;
+    }
+    
+    .result-card .payment-receipt .receipt-item span:first-child {
+      opacity: 0.5;
+    }
+    
+    /* Input area */
+    .input-area {
+      flex-shrink: 0;
+      padding: 16px 0 10px;
+      border-top: 1px solid var(--phos-dark);
+    }
+    
+    .input-row {
       display: flex;
       gap: 10px;
-      margin-bottom: 12px;
-      align-items: center;
     }
     
-    .wallet-field label {
-      font-size: 0.75rem;
-      opacity: 0.5;
-      min-width: 100px;
-    }
-    
-    .wallet-field input, .wallet-field select {
+    .input-row input {
       flex: 1;
       background: var(--bg-dark);
       border: 1px solid var(--phos-dark);
       color: var(--phos);
-      padding: 8px 12px;
+      padding: 12px 16px;
       font-family: inherit;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       outline: none;
-      border-radius: 3px;
+      border-radius: 4px;
     }
     
-    .wallet-field input:focus, .wallet-field select:focus {
+    .input-row input:focus {
       border-color: var(--phos);
+      box-shadow: 0 0 8px rgba(0, 255, 65, 0.15);
     }
     
-    .btn {
-      background: rgba(0,255,65,0.1);
+    .input-row button {
+      background: rgba(0, 255, 65, 0.1);
       border: 1px solid var(--phos);
       color: var(--phos);
-      padding: 10px 24px;
+      padding: 12px 24px;
       font-family: inherit;
       font-size: 0.85rem;
       cursor: pointer;
@@ -396,41 +319,61 @@
       letter-spacing: 1px;
     }
     
-    .btn:hover {
-      background: rgba(0,255,65,0.2);
-      box-shadow: 0 0 12px rgba(0,255,65,0.2);
+    .input-row button:hover {
+      background: rgba(0, 255, 65, 0.2);
+      box-shadow: 0 0 12px rgba(0, 255, 65, 0.2);
     }
     
-    .btn:active {
-      transform: scale(0.98);
+    .input-row button:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
     }
     
-    .btn-amber {
-      border-color: var(--amber);
-      color: var(--amber);
-      background: rgba(246,133,27,0.1);
+    /* Suggestions */
+    .suggestions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      flex-wrap: wrap;
     }
     
-    .btn-amber:hover {
-      background: rgba(246,133,27,0.2);
-      box-shadow: 0 0 12px rgba(246,133,27,0.2);
+    .suggestion {
+      background: transparent;
+      border: 1px solid var(--phos-dark);
+      color: var(--phos-dim);
+      padding: 6px 14px;
+      font-family: inherit;
+      font-size: 0.75rem;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: all 0.2s;
+    }
+    
+    .suggestion:hover {
+      border-color: var(--phos);
+      color: var(--phos);
+      background: rgba(0, 255, 65, 0.05);
     }
     
     /* Terminal output */
-    .terminal {
+    .terminal-output {
       background: var(--bg-dark);
       border: 1px solid var(--phos-dark);
-      border-radius: 6px;
-      padding: 16px;
-      font-size: 0.8rem;
-      line-height: 1.7;
-      min-height: 200px;
-      max-height: 500px;
+      border-radius: 4px;
+      padding: 10px 14px;
+      margin-top: 10px;
+      font-size: 0.72rem;
+      line-height: 1.5;
+      max-height: 180px;
       overflow-y: auto;
-      margin-top: 16px;
+      display: none;
     }
     
-    .terminal .term-line {
+    .terminal-output.visible {
+      display: block;
+    }
+    
+    .terminal-output .term-line {
       opacity: 0;
       animation: termIn 0.05s forwards;
     }
@@ -439,30 +382,15 @@
       to { opacity: 1; }
     }
     
-    .terminal .prompt {
-      color: var(--phos-dim);
-    }
-    
-    .terminal .ok {
-      color: var(--phos);
-    }
-    
-    .terminal .err {
-      color: var(--red);
-    }
-    
-    .terminal .warn {
-      color: var(--amber);
-    }
-    
-    .terminal .dim {
-      opacity: 0.5;
-    }
+    .terminal-output .prompt { color: var(--phos-dim); }
+    .terminal-output .ok { color: var(--phos); }
+    .terminal-output .err { color: var(--red); }
+    .terminal-output .warn { color: var(--amber); }
+    .terminal-output .dim { opacity: 0.5; }
     
     .cursor {
       display: inline-block;
-      width: 8px;
-      height: 14px;
+      width: 7px; height: 12px;
       background: var(--phos);
       animation: blink 1s steps(2) infinite;
       vertical-align: text-bottom;
@@ -473,126 +401,43 @@
       50% { opacity: 0; }
     }
     
-    /* Payment flow */
-    .flow-step {
+    /* Wallet bar */
+    .wallet-bar {
       display: flex;
       gap: 12px;
-      align-items: flex-start;
-      padding: 12px 0;
-      border-bottom: 1px solid rgba(0,255,65,0.1);
-      opacity: 0;
-      transform: translateX(-10px);
-      animation: flowIn 0.3s forwards;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      font-size: 0.72rem;
+      flex-wrap: wrap;
     }
     
-    @keyframes flowIn {
-      to { opacity: 1; transform: translateX(0); }
-    }
-    
-    .flow-step .num {
-      font-family: 'VT323', monospace;
-      font-size: 1.5rem;
-      color: var(--phos-dim);
-      min-width: 30px;
-    }
-    
-    .flow-step .content {
-      flex: 1;
-    }
-    
-    .flow-step .title {
-      font-size: 0.85rem;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-    
-    .flow-step .detail {
-      font-size: 0.75rem;
-      opacity: 0.6;
-      font-family: monospace;
-      word-break: break-all;
-    }
-    
-    .flow-step.pending .num { color: var(--amber); }
-    .flow-step.success .num { color: var(--phos); }
-    .flow-step.success .title { color: var(--phos); }
-    .flow-step.error .num { color: var(--red); }
-    
-    /* Stats grid */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-    
-    .stat-card {
-      background: rgba(0,255,65,0.03);
+    .wallet-bar .item {
+      padding: 4px 12px;
       border: 1px solid var(--phos-dark);
-      padding: 16px;
-      border-radius: 6px;
-      text-align: center;
+      border-radius: 3px;
+      opacity: 0.7;
     }
     
-    .stat-card .num {
-      font-family: 'VT323', monospace;
-      font-size: 2.2rem;
+    .wallet-bar .item strong {
       color: var(--phos);
-      text-shadow: 0 0 8px var(--phos-dim);
     }
     
-    .stat-card .label {
-      font-size: 0.7rem;
-      opacity: 0.5;
-      margin-top: 4px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    
-    /* Category list */
-    .cat-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 8px;
-      margin-bottom: 20px;
-    }
-    
-    .cat-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 8px 14px;
-      background: rgba(0,255,65,0.02);
-      border: 1px solid var(--phos-dark);
-      border-radius: 4px;
-      font-size: 0.8rem;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    
-    .cat-item:hover {
-      border-color: var(--phos);
-      background: rgba(0,255,65,0.06);
-    }
-    
-    .cat-item .count {
-      opacity: 0.5;
-      font-weight: 700;
+    .wallet-bar .item.amber strong {
+      color: var(--amber);
     }
     
     /* Responsive */
     @media (max-width: 600px) {
-      .header h1 { font-size: 2rem; }
-      .api-card { flex-direction: column; align-items: flex-start; gap: 4px; }
-      .api-card .name { min-width: auto; }
-      .api-card .desc { white-space: normal; }
-      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .header h1 { font-size: 1.8rem; }
+      .msg-user .bubble { max-width: 95%; }
+      .input-row { flex-direction: column; }
+      .input-row button { width: 100%; }
     }
     
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: var(--bg-dark); }
-    ::-webkit-scrollbar-thumb { background: var(--phos-dark); border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--phos-dim); }
+    ::-webkit-scrollbar-thumb { background: var(--phos-dark); border-radius: 3px; }
   </style>
 </head>
 <body>
@@ -604,513 +449,467 @@
       <!-- Header -->
       <div class="header">
         <h1>🔐 ap1ph3x</h1>
-        <div class="tagline">API + CIPHER + HEX — The encrypted payment protocol for AI agents</div>
+        <div class="tagline">The encrypted payment protocol for AI agents</div>
         <div class="stats">
           <div class="stat"><strong>1779</strong> APIs</div>
-          <div class="stat"><strong>53</strong> Categories</div>
           <div class="stat"><strong>739</strong> Free</div>
+          <div class="stat"><strong>53</strong> Categories</div>
           <div class="stat"><strong>6</strong> Chains</div>
-          <div class="stat"><strong>2</strong> Protocols</div>
         </div>
       </div>
       
-      <!-- Boot sequence -->
-      <div class="boot" id="boot"></div>
-      
-      <!-- Tabs -->
-      <div class="tabs">
-        <button class="tab active" data-tab="registry">📦 Registry</button>
-        <button class="tab" data-tab="wallet">👛 Wallet</button>
-        <button class="tab" data-tab="payment">💳 Payment Flow</button>
-        <button class="tab" data-tab="stats">📊 Stats</button>
+      <!-- Wallet bar -->
+      <div class="wallet-bar">
+        <div class="item">Chain: <strong>Base</strong></div>
+        <div class="item">Wallet: <strong>0xe987...1f9c</strong></div>
+        <div class="item amber">USDC: <strong>$4.98</strong></div>
+        <div class="item">Cap: <strong>$0.01</strong>/call</div>
+        <div class="item">Protocol: <strong>x402+MPP</strong></div>
       </div>
       
-      <!-- ═══ REGISTRY PANEL ═══ -->
-      <div class="panel active" id="panel-registry">
-        <div class="search-bar">
-          <input type="text" id="search-input" placeholder="Search 1779 APIs... (e.g. crypto, ai, weather)" />
-          <select id="category-filter">
-            <option value="">All categories</option>
-          </select>
-          <select id="auth-filter">
-            <option value="">All auth</option>
-            <option value="none">Free (no auth)</option>
-            <option value="apikey">API Key</option>
-            <option value="oauth">OAuth</option>
-            <option value="opensource">Open Source</option>
-          </select>
-        </div>
-        <div class="api-grid" id="api-grid"></div>
-        <div class="pagination" id="pagination"></div>
-      </div>
-      
-      <!-- ═══ WALLET PANEL ═══ -->
-      <div class="panel" id="panel-wallet">
-        <div class="wallet-box">
-          <h3>⚡ Wallet Configuration</h3>
-          <div class="wallet-field">
-            <label>Chain</label>
-            <select id="wallet-chain">
-              <option value="base">Base (8453)</option>
-              <option value="ethereum">Ethereum (1)</option>
-              <option value="tempo">Tempo (5042)</option>
-              <option value="polygon">Polygon (137)</option>
-              <option value="monad">Monad Testnet (10143)</option>
-              <option value="bsc">BSC (56)</option>
-            </select>
+      <!-- Chat -->
+      <div class="chat" id="chat">
+        <div class="msg msg-agent">
+          <div class="who">ap1ph3x agent</div>
+          <div class="bubble">
+            🔐 Agent initialized. I can search 1779 APIs, pay for premium endpoints, and fetch data for you.
+            <br><br>
+            Try asking me something — I'll find the right API, handle the payment, and return the data.
           </div>
-          <div class="wallet-field">
-            <label>Max / call</label>
-            <input type="number" id="wallet-max-call" value="0.01" step="0.001" min="0" /> USDC
-          </div>
-          <div class="wallet-field">
-            <label>Max / day</label>
-            <input type="number" id="wallet-max-day" value="10.00" step="0.5" min="0" /> USDC
-          </div>
-          <div style="margin-top: 16px; display: flex; gap: 10px;">
-            <button class="btn" id="wallet-init">⚡ Init Wallet</button>
-            <button class="btn btn-amber" id="wallet-export">📋 Export Config</button>
-          </div>
-        </div>
-        <div class="terminal" id="wallet-terminal">
-          <div class="term-line dim">> Waiting for wallet initialization...</div>
-          <span class="cursor"></span>
         </div>
       </div>
       
-      <!-- ═══ PAYMENT FLOW PANEL ═══ -->
-      <div class="panel" id="panel-payment">
-        <div class="wallet-box">
-          <h3>💳 Simulated Payment Flow</h3>
-          <div class="wallet-field">
-            <label>API URL</label>
-            <input type="text" id="pay-url" value="https://api.exa.ai/search" />
-          </div>
-          <div class="wallet-field">
-            <label>Method</label>
-            <select id="pay-method">
-              <option value="GET">GET</option>
-              <option value="POST">POST</option>
-            </select>
-          </div>
-          <div class="wallet-field">
-            <label>Protocol</label>
-            <select id="pay-protocol">
-              <option value="auto">Auto-detect</option>
-              <option value="x402">x402</option>
-              <option value="mpp">MPP</option>
-            </select>
-          </div>
-          <div class="wallet-field">
-            <label>Amount</label>
-            <input type="number" id="pay-amount" value="0.01" step="0.001" /> USDC
-          </div>
-          <div style="margin-top: 16px;">
-            <button class="btn" id="pay-execute">🚀 Execute Payment</button>
-          </div>
-        </div>
-        <div id="payment-flow"></div>
-        <div class="terminal" id="payment-terminal" style="margin-top: 16px;"></div>
-      </div>
+      <!-- Terminal output -->
+      <div class="terminal-output" id="terminal"></div>
       
-      <!-- ═══ STATS PANEL ═══ -->
-      <div class="panel" id="panel-stats">
-        <div class="stats-grid" id="stats-grid"></div>
-        <h3 style="margin-bottom: 12px; font-size: 0.9rem; opacity: 0.7;">📂 Categories (53)</h3>
-        <div class="cat-list" id="cat-list"></div>
+      <!-- Input -->
+      <div class="input-area">
+        <div class="input-row">
+          <input type="text" id="input" placeholder="Ask the agent anything... (e.g. 'What's the price of Bitcoin?')" autocomplete="off" />
+          <button id="send">⚡ Execute</button>
+        </div>
+        <div class="suggestions">
+          <button class="suggestion" data-q="What is the price of Bitcoin?">₿ BTC price</button>
+          <button class="suggestion" data-q="Tell me a cat fact">🐱 Cat fact</button>
+          <button class="suggestion" data-q="What's the weather in Berlin?">🌤️ Weather Berlin</button>
+          <button class="suggestion" data-q="What's trending on Hacker News?">📰 Hacker News</button>
+          <button class="suggestion" data-q="Give me a random dog image">🐶 Dog image</button>
+          <button class="suggestion" data-q="What's the DeFi TVL across all chains?">📊 DeFi TVL</button>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
-    // ═══ DATA — Embedded from ap1ph3x registry ═══
-    // This is a subset for the demo. The full registry has 1779 APIs.
+    // ═══ AGENT BRAIN ═══
+    // Maps user queries to API endpoints in the registry
     
-    // We'll generate a representative sample from the actual SDK data
-    const APIS = [
-      // Crypto
-      { id: 'coingecko', name: 'CoinGecko', category: 'cryptocurrency', url: 'https://api.coingecko.com/api/v3', authMethod: 'apikey', description: 'Crypto prices, market data, trending coins' },
-      { id: 'defillama', name: 'DefiLlama', category: 'cryptocurrency', url: 'https://api.llama.fi', authMethod: 'none', description: 'DeFi TVL data across all chains. Completely free' },
-      { id: 'etherscan', name: 'Etherscan', category: 'cryptocurrency', url: 'https://api.etherscan.io/api', authMethod: 'apikey', description: 'Ethereum blockchain data, transactions, contracts' },
-      { id: '0x', name: '0x Protocol', category: 'cryptocurrency', url: 'https://0x.org/api', authMethod: 'none', description: 'Decentralized exchange protocol API' },
-      { id: '1inch', name: '1inch', category: 'cryptocurrency', url: 'https://1inch.io/api', authMethod: 'none', description: 'DEX aggregator API for best swap rates' },
-      { id: 'alchemy-eth', name: 'Alchemy Ethereum', category: 'cryptocurrency', url: 'https://docs.alchemy.com/alchemy', authMethod: 'apikey', description: 'Ethereum node infrastructure API' },
-      { id: 'binance', name: 'Binance', category: 'cryptocurrency', url: 'https://binance-docs.github.io/apidocs', authMethod: 'apikey', description: 'Crypto exchange trading data' },
-      { id: 'coinbase', name: 'Coinbase', category: 'cryptocurrency', url: 'https://api.coinbase.com/v2', authMethod: 'apikey', description: 'Crypto exchange and wallet API' },
-      { id: 'kraken', name: 'Kraken', category: 'cryptocurrency', url: 'https://api.kraken.com', authMethod: 'apikey', description: 'Crypto exchange market data' },
-      { id: 'bitfinex', name: 'Bitfinex', category: 'cryptocurrency', url: 'https://api-pub.bitfinex.com/v2', authMethod: 'none', description: 'Crypto exchange ticker data' },
-      { id: 'coinpaprika', name: 'Coinpaprika', category: 'cryptocurrency', url: 'https://api.coinpaprika.com/v1', authMethod: 'none', description: 'Crypto market data. Free, no key' },
-      { id: 'crypto-compare', name: 'CryptoCompare', category: 'cryptocurrency', url: 'https://min-api.cryptocompare.com', authMethod: 'apikey', description: 'Crypto price comparison and historical data' },
-      { id: 'onchain-gas', name: 'ETH Gas Station', category: 'cryptocurrency', url: 'https://ethgasstation.info/api', authMethod: 'apikey', description: 'Ethereum gas price estimates' },
-      { id: 'mempool-space', name: 'Mempool.space', category: 'cryptocurrency', url: 'https://mempool.space/api', authMethod: 'none', description: 'Bitcoin mempool and blockchain data' },
-      
-      // AI / ML
-      { id: 'huggingface', name: 'Hugging Face', category: 'machine-learning', url: 'https://api-inference.huggingface.co', authMethod: 'apikey', description: 'Free inference for 100K+ models. Text, image, audio' },
-      { id: 'ollama', name: 'Ollama', category: 'machine-learning', url: 'http://localhost:11434/api', authMethod: 'none', description: 'Run LLMs locally. Open-source. Full privacy' },
-      { id: 'openrouter', name: 'OpenRouter', category: 'machine-learning', url: 'https://openrouter.ai/api/v1', authMethod: 'apikey', description: 'Unified API for 200+ LLMs. Free models included' },
-      { id: 'localai', name: 'LocalAI', category: 'machine-learning', url: 'http://localhost:8080/v1', authMethod: 'none', description: 'Self-hosted OpenAI-compatible API' },
-      { id: 'openai', name: 'OpenAI', category: 'machine-learning', url: 'https://api.openai.com/v1', authMethod: 'apikey', description: 'GPT models, DALL-E, embeddings, whisper' },
-      { id: 'clarifai', name: 'Clarifai', category: 'machine-learning', url: 'https://api.clarifai.com/v2', authMethod: 'apikey', description: 'Computer vision and NLP API' },
-      { id: 'wenxin', name: 'Baidu Wenxin', category: 'machine-learning', url: 'https://wenxin.baidu.com/api', authMethod: 'apikey', description: 'Baidu AI language models' },
-      { id: 'vision-api', name: 'Google Vision', category: 'machine-learning', url: 'https://vision.googleapis.com/v1', authMethod: 'apikey', description: 'Google Cloud Vision API for image analysis' },
-      
-      // Development
-      { id: 'github-api', name: 'GitHub API', category: 'development', url: 'https://api.github.com', authMethod: 'apikey', description: 'GitHub repos, issues, PRs, users. 60/hr free' },
-      { id: 'gitlab-api', name: 'GitLab API', category: 'development', url: 'https://gitlab.com/api/v4', authMethod: 'apikey', description: 'GitLab repos, CI/CD, issues' },
-      { id: 'npm-registry', name: 'npm Registry', category: 'development', url: 'https://registry.npmjs.org', authMethod: 'none', description: 'npm package metadata, versions, dependencies' },
-      { id: 'pypi', name: 'PyPI API', category: 'development', url: 'https://pypi.org/pypi', authMethod: 'none', description: 'Python package index metadata' },
-      { id: 'dns-json', name: 'Google DNS', category: 'development', url: 'https://dns.google/resolve', authMethod: 'none', description: 'DNS resolution over HTTPS. Free' },
-      { id: 'httpbin', name: 'httpbin', category: 'development', url: 'https://httpbin.org', authMethod: 'none', description: 'HTTP request/response testing. Free' },
-      { id: 'docker-hub', name: 'Docker Hub', category: 'development', url: 'https://hub.docker.com/v2', authMethod: 'none', description: 'Docker container registry API' },
-      { id: 'regex101', name: 'Regex101', category: 'development', url: 'https://regex101.com/api', authMethod: 'none', description: 'Regex testing and debugging' },
-      
-      // Search
-      { id: 'duckduckgo', name: 'DuckDuckGo', category: 'open-data', url: 'https://api.duckduckgo.com/', authMethod: 'none', description: 'Free instant answer API. No key, no tracking' },
-      { id: 'wikipedia', name: 'Wikipedia API', category: 'open-data', url: 'https://en.wikipedia.org/w/api.php', authMethod: 'none', description: 'Free Wikipedia article search and retrieval' },
-      { id: 'openalex', name: 'OpenAlex', category: 'open-data', url: 'https://api.openalex.org', authMethod: 'none', description: 'Open catalog of 250M+ scholarly works' },
-      { id: 'searx', name: 'SearXNG', category: 'open-data', url: 'https://searx.be/search', authMethod: 'none', description: 'Privacy-respecting metasearch. Self-hostable' },
-      
-      // Social
-      { id: 'hn-api', name: 'Hacker News', category: 'social', url: 'https://hacker-news.firebaseio.com/v0', authMethod: 'none', description: 'HN stories, comments, users. Free, no key' },
-      { id: 'reddit-api', name: 'Reddit API', category: 'social', url: 'https://www.reddit.com', authMethod: 'oauth', description: 'Reddit posts, comments, subreddits' },
-      { id: 'mastodon', name: 'Mastodon API', category: 'social', url: 'https://mastodon.social/api/v1', authMethod: 'oauth', description: 'Federated social network. Open-source' },
-      
-      // Weather / Location
-      { id: 'open-meteo', name: 'Open-Meteo', category: 'weather', url: 'https://api.open-meteo.com/v1', authMethod: 'none', description: 'Free weather API. No key. 10K calls/day' },
-      { id: 'nominatim', name: 'OpenStreetMap', category: 'geocoding', url: 'https://nominatim.openstreetmap.org', authMethod: 'none', description: 'Geocoding, reverse geocoding. Free' },
-      { id: 'osrm', name: 'OSRM', category: 'geocoding', url: 'https://router.project-osrm.org', authMethod: 'none', description: 'Routing API. Shortest path. Self-hostable' },
-      { id: 'noaa', name: 'NOAA', category: 'weather', url: 'https://www.ncdc.noaa.gov/cdo-web/api/v2', authMethod: 'apikey', description: 'US weather and climate data' },
-      
-      // Finance
-      { id: 'alpha-vantage', name: 'Alpha Vantage', category: 'finance', url: 'https://www.alphavantage.co/query', authMethod: 'apikey', description: 'Stock market data, forex, crypto. Free tier' },
-      { id: 'fred', name: 'FRED', category: 'finance', url: 'https://api.stlouisfed.org/fred', authMethod: 'apikey', description: 'Federal Reserve economic data' },
-      { id: 'fixer', name: 'Fixer.io', category: 'currency-exchange', url: 'https://data.fixer.io/api', authMethod: 'apikey', description: 'Foreign exchange rates API' },
-      { id: 'marketstack', name: 'Marketstack', category: 'finance', url: 'https://api.marketstack.com/v1', authMethod: 'apikey', description: 'Stock market data, 100K requests/mo free' },
-      
-      // Security
-      { id: 'virustotal', name: 'VirusTotal', category: 'security', url: 'https://www.virustotal.com/api/v3', authMethod: 'apikey', description: 'Malware and URL scanning' },
-      { id: 'haveibeenpwned', name: 'HaveIBeenPwned', category: 'security', url: 'https://haveibeenpwned.com/api/v3', authMethod: 'apikey', description: 'Check if email has been breached' },
-      
-      // Animals (fun)
-      { id: 'cat-facts', name: 'Cat Facts', category: 'animals', url: 'https://catfact.ninja', authMethod: 'none', description: 'Random cat facts. Free, no key' },
-      { id: 'dog-facts', name: 'Dog Facts', category: 'animals', url: 'https://dukengn.github.io/Dog-facts-API', authMethod: 'none', description: 'Random dog facts. Free' },
-      { id: 'dog-ceo', name: 'Dog CEO', category: 'animals', url: 'https://dog.ceo/dog-api', authMethod: 'none', description: 'Random dog images by breed. Free' },
-      
-      // Government
-      { id: 'us-census', name: 'US Census', category: 'government', url: 'https://api.census.gov/data', authMethod: 'apikey', description: 'US Census demographic data' },
-      { id: 'data-gov', name: 'Data.gov', category: 'government', url: 'https://catalog.data.gov/api/3', authMethod: 'none', description: 'US government open data. Free' },
-      
-      // News
-      { id: 'newsapi', name: 'NewsAPI', category: 'news', url: 'https://newsapi.org/v2', authMethod: 'apikey', description: 'News headlines from 80K+ sources' },
-      { id: 'nyt', name: 'NY Times', category: 'news', url: 'https://api.nytimes.com/svc', authMethod: 'apikey', description: 'New York Times articles and metadata' },
+    const API_REGISTRY = [
+      // Free APIs (no payment needed)
+      {
+        id: 'coingecko-price',
+        name: 'CoinGecko',
+        category: 'cryptocurrency',
+        url: 'https://api.coingecko.com/api/v3/simple/price',
+        authMethod: 'none',
+        paid: false,
+        keywords: ['bitcoin', 'btc', 'ethereum', 'eth', 'crypto', 'price', 'token', 'coin'],
+        buildUrl: (q) => {
+          const coin = q.match(/bitcoin|btc/i) ? 'bitcoin' : q.match(/ethereum|eth/i) ? 'ethereum' : 'bitcoin';
+          return `https://api.coingecko.com/api/v3/simple/price?ids=${coin}&vs_currencies=usd,eur`;
+        },
+        parse: (data, q) => {
+          const coin = q.match(/bitcoin|btc/i) ? 'bitcoin' : q.match(/ethereum|eth/i) ? 'ethereum' : 'bitcoin';
+          const price = data[coin]?.usd;
+          const eur = data[coin]?.eur;
+          return `<strong>${coin.charAt(0).toUpperCase() + coin.slice(1)}</strong> is currently trading at <strong>$${price.toLocaleString()}</strong> USD (${eur?.toLocaleString()} EUR).`;
+        }
+      },
+      {
+        id: 'cat-facts',
+        name: 'Cat Facts API',
+        category: 'animals',
+        url: 'https://catfact.ninja/fact',
+        authMethod: 'none',
+        paid: false,
+        keywords: ['cat', 'fact', 'cats', 'random'],
+        buildUrl: () => 'https://catfact.ninja/fact',
+        parse: (data) => `🐱 <strong>Cat Fact:</strong> ${data.fact}`
+      },
+      {
+        id: 'defillama-tvl',
+        name: 'DefiLlama',
+        category: 'cryptocurrency',
+        url: 'https://api.llama.fi/v2/chains',
+        authMethod: 'none',
+        paid: false,
+        keywords: ['defi', 'tvl', 'total value', 'locked', 'chains', 'protocol'],
+        buildUrl: () => 'https://api.llama.fi/v2/chains',
+        parse: (data) => {
+          const total = data.reduce((s, c) => s + (c.tvl || 0), 0);
+          const top = data.sort((a, b) => (b.tvl || 0) - (a.tvl || 0)).slice(0, 5);
+          let html = `📊 <strong>Total DeFi TVL:</strong> $${(total / 1e9).toFixed(2)}B across ${data.length} chains<br><br><strong>Top 5:</strong><br>`;
+          top.forEach((c, i) => {
+            html += `${i + 1}. ${c.name}: $${((c.tvl || 0) / 1e9).toFixed(2)}B<br>`;
+          });
+          return html;
+        }
+      },
+      {
+        id: 'hn-top',
+        name: 'Hacker News API',
+        category: 'social',
+        url: 'https://hacker-news.firebaseio.com/v0/topstories.json',
+        authMethod: 'none',
+        paid: false,
+        keywords: ['hacker news', 'hn', 'trending', 'news', 'tech news', 'top stories'],
+        buildUrl: () => 'https://hacker-news.firebaseio.com/v0/topstories.json',
+        parse: async (data) => {
+          // Fetch top 5 story details
+          const stories = [];
+          for (const id of data.slice(0, 5)) {
+            try {
+              const res = await fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`);
+              const story = await res.json();
+              stories.push(story);
+            } catch (e) {}
+          }
+          let html = '📰 <strong>Top 5 Hacker News stories:</strong><br><br>';
+          stories.forEach((s, i) => {
+            html += `${i + 1}. <a href="${s.url || 'https://news.ycombinator.com/item?id=' + s.id}" target="_blank" style="color:var(--phos)">${s.title}</a> <span style="opacity:0.5">(${s.score} points)</span><br>`;
+          });
+          return html;
+        }
+      },
+      {
+        id: 'dog-ceo',
+        name: 'Dog CEO',
+        category: 'animals',
+        url: 'https://dog.ceo/api/breeds/image/random',
+        authMethod: 'none',
+        paid: false,
+        keywords: ['dog', 'doggo', 'puppy', 'random dog', 'dog image', 'woof'],
+        buildUrl: () => 'https://dog.ceo/api/breeds/image/random',
+        parse: (data) => `🐶 <strong>Here's a random doggo!</strong><br><br><img src="${data.message}" style="max-width:300px;border-radius:8px;border:1px solid var(--phos-dark);margin-top:8px" />`
+      },
+      {
+        id: 'bored',
+        name: 'Bored API',
+        category: 'entertainment',
+        url: 'https://www.boredapi.com/api/activity',
+        authMethod: 'none',
+        paid: false,
+        keywords: ['bored', 'activity', 'something to do', 'fun', 'random activity'],
+        buildUrl: () => 'https://www.boredapi.com/api/activity',
+        parse: (data) => `🎯 <strong>Activity:</strong> ${data.activity}<br><span style="opacity:0.6">Type: ${data.type} | Participants: ${data.participants}</span>`
+      },
+      {
+        id: 'useless-fact',
+        name: 'Useless Facts',
+        category: 'open-data',
+        url: 'https://uselessfacts.jsph.pl/api/v2/facts/random',
+        authMethod: 'none',
+        paid: false,
+        keywords: ['fact', 'useless', 'random fact', 'trivia', 'did you know'],
+        buildUrl: () => 'https://uselessfacts.jsph.pl/api/v2/facts/random',
+        parse: (data) => `💡 <strong>Useless Fact:</strong> ${data.text}`
+      },
+      {
+        id: 'github-repo',
+        name: 'GitHub API',
+        category: 'development',
+        url: 'https://api.github.com/repos/dropmoltbot/ap1ph3x',
+        authMethod: 'none',
+        paid: false,
+        keywords: ['github', 'repo', 'repository', 'stars', 'forks', 'ap1ph3x repo'],
+        buildUrl: () => 'https://api.github.com/repos/dropmoltbot/ap1ph3x',
+        parse: (data) => `📦 <strong>${data.full_name}</strong><br><br>${data.description}<br><br>⭐ ${data.stargazers_count} stars | 🍴 ${data.forks_count} forks | 📝 ${data.language}<br><a href="${data.html_url}" target="_blank" style="color:var(--phos)">${data.html_url}</a>`
+      },
+      // Simulated paid APIs (x402)
+      {
+        id: 'exa-search',
+        name: 'Exa AI Search (x402)',
+        category: 'search',
+        url: 'https://api.exa.ai/search',
+        authMethod: 'x402',
+        paid: true,
+        cost: 0.01,
+        keywords: ['search', 'web search', 'find', 'research', 'look up', 'google'],
+        buildUrl: () => 'https://api.exa.ai/search',
+        parse: (data) => `🔍 <strong>Exa Search Results (paid 0.01 USDC via x402):</strong><br><br>${data || 'Simulated results — would return real web search data.'}`
+      },
+      {
+        id: 'nansen-smart',
+        name: 'Nansen Smart Money (MPP)',
+        category: 'social',
+        url: 'https://api.nansen.ai/api/v1/smart-money/netflow',
+        authMethod: 'mpp',
+        paid: true,
+        cost: 0.05,
+        keywords: ['smart money', 'nansen', 'whale', 'on-chain', 'netflow', 'institutional'],
+        buildUrl: () => 'https://api.nansen.ai/api/v1/smart-money/netflow',
+        parse: (data) => `🐋 <strong>Nansen Smart Money (paid 0.05 USDC via MPP):</strong><br><br>${data || 'Simulated results — would return real smart money flow data.'}`
+      },
     ];
     
-    const CHAINS = {
-      base: { name: 'Base', chainId: 8453, usdc: true, native: 'ETH' },
-      ethereum: { name: 'Ethereum', chainId: 1, usdc: true, native: 'ETH' },
-      tempo: { name: 'Tempo', chainId: 5042, usdc: true, native: 'ETH' },
-      polygon: { name: 'Polygon', chainId: 137, usdc: true, native: 'MATIC' },
-      monad: { name: 'Monad Testnet', chainId: 10143, usdc: false, native: 'MON' },
-      bsc: { name: 'BSC', chainId: 56, usdc: true, native: 'BNB' },
-    };
+    // ═══ AGENT LOGIC ═══
     
-    // ═══ STATE ═══
-    let currentPage = 1;
-    const perPage = 15;
-    let filteredApis = [...APIS];
-    
-    // ═══ BOOT SEQUENCE ═══
-    const bootLines = [
-      '> ap1ph3x v0.1.0 booting...',
-      '> loading registry: 1779 APIs from 53 categories',
-      '> loading chains: base, ethereum, tempo, polygon, monad, bsc',
-      '> loading protocols: x402 ✅ mpp ✅',
-      '> wallet: ready (zero custody)',
-      '> spend caps: $0.01/call, $10.00/day',
-      '> registry: 739 free APIs loaded',
-      '> ap1ph3x ready. type to search.',
-    ];
-    
-    const bootEl = document.getElementById('boot');
-    bootLines.forEach((line, i) => {
-      const div = document.createElement('div');
-      div.className = 'line';
-      div.style.animationDelay = (i * 0.15) + 's';
-      div.textContent = line;
-      bootEl.appendChild(div);
-    });
-    
-    // ═══ TABS ═══
-    document.querySelectorAll('.tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-        tab.classList.add('active');
-        document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
-      });
-    });
-    
-    // ═══ REGISTRY ═══
-    function renderApis() {
-      const grid = document.getElementById('api-grid');
-      const start = (currentPage - 1) * perPage;
-      const pageApis = filteredApis.slice(start, start + perPage);
+    function findAPI(query) {
+      const q = query.toLowerCase();
+      let best = null;
+      let bestScore = 0;
       
-      grid.innerHTML = '';
-      pageApis.forEach(api => {
-        const card = document.createElement('div');
-        card.className = 'api-card';
-        card.innerHTML = `
-          <div class="name">${api.name}</div>
-          <div class="desc">${api.description}</div>
-          <div class="cat-badge">${api.category}</div>
-          <div class="auth-badge auth-${api.authMethod}">${api.authMethod === 'none' ? 'FREE' : api.authMethod.toUpperCase()}</div>
-        `;
-        card.addEventListener('click', () => {
-          navigator.clipboard?.writeText(api.url);
-          card.style.borderColor = '#00ff41';
-          setTimeout(() => card.style.borderColor = '', 500);
-        });
-        grid.appendChild(card);
-      });
-      
-      // Pagination
-      const pagEl = document.getElementById('pagination');
-      const totalPages = Math.ceil(filteredApis.length / perPage);
-      pagEl.innerHTML = `
-        <button onclick="prevPage()" ${currentPage === 1 ? 'disabled' : ''}>◀ PREV</button>
-        <span class="info">Page ${currentPage}/${totalPages} — ${filteredApis.length} APIs</span>
-        <button onclick="nextPage()" ${currentPage === totalPages ? 'disabled' : ''}>NEXT ▶</button>
-      `;
-    }
-    
-    window.prevPage = () => { if (currentPage > 1) { currentPage--; renderApis(); } };
-    window.nextPage = () => {
-      const totalPages = Math.ceil(filteredApis.length / perPage);
-      if (currentPage < totalPages) { currentPage++; renderApis(); }
-    };
-    
-    // Search
-    function filterApis() {
-      const q = document.getElementById('search-input').value.toLowerCase();
-      const cat = document.getElementById('category-filter').value;
-      const auth = document.getElementById('auth-filter').value;
-      
-      filteredApis = APIS.filter(api => {
-        const matchQ = !q || api.name.toLowerCase().includes(q) || api.description.toLowerCase().includes(q) || api.category.toLowerCase().includes(q);
-        const matchCat = !cat || api.category === cat;
-        const matchAuth = !auth || api.authMethod === auth;
-        return matchQ && matchCat && matchAuth;
-      });
-      currentPage = 1;
-      renderApis();
-    }
-    
-    document.getElementById('search-input').addEventListener('input', filterApis);
-    document.getElementById('auth-filter').addEventListener('change', filterApis);
-    
-    // Category filter
-    const catFilter = document.getElementById('category-filter');
-    const categories = [...new Set(APIS.map(a => a.category))].sort();
-    categories.forEach(cat => {
-      const opt = document.createElement('option');
-      opt.value = cat;
-      opt.textContent = `${cat} (${APIS.filter(a => a.category === cat).length})`;
-      catFilter.appendChild(opt);
-    });
-    catFilter.addEventListener('change', filterApis);
-    
-    // ═══ WALLET ═══
-    document.getElementById('wallet-init').addEventListener('click', () => {
-      const chain = document.getElementById('wallet-chain').value;
-      const maxCall = document.getElementById('wallet-max-call').value;
-      const maxDay = document.getElementById('wallet-max-day').value;
-      const chainInfo = CHAINS[chain];
-      
-      // Generate a mock address
-      const mockAddr = '0x' + Array.from({length: 40}, () => '0123456789abcdef'[Math.floor(Math.random() * 16)]).join('');
-      
-      const term = document.getElementById('wallet-terminal');
-      term.innerHTML = '';
-      
-      const lines = [
-        { t: 'prompt', text: '> ap1ph3x.init({' },
-        { t: 'dim', text: `    chain: '${chain}',` },
-        { t: 'dim', text: `    chainId: ${chainInfo.chainId},` },
-        { t: 'dim', text: `    native: '${chainInfo.native}',` },
-        { t: 'dim', text: `    maxPerCall: ${maxCall},` },
-        { t: 'dim', text: `    maxPerDay: ${maxDay},` },
-        { t: 'prompt', text: '  })' },
-        { t: '', text: '' },
-        { t: 'ok', text: '✅ Wallet initialized' },
-        { t: 'dim', text: `   Address: ${mockAddr}` },
-        { t: 'dim', text: `   Chain: ${chainInfo.name} (${chainInfo.chainId})` },
-        { t: 'dim', text: `   USDC: ${chainInfo.usdc ? '✅ supported' : '❌ not available'}` },
-        { t: 'dim', text: `   Spend cap: $${maxCall}/call, $${maxDay}/day` },
-        { t: '', text: '' },
-        { t: 'ok', text: '✅ Zero custody — key never leaves process' },
-        { t: 'ok', text: '✅ x402 protocol ready' },
-        { t: 'ok', text: '✅ MPP protocol ready' },
-        { t: 'prompt', text: '> Ready to fetch APIs.' },
-      ];
-      
-      lines.forEach((line, i) => {
-        const div = document.createElement('div');
-        div.className = 'term-line ' + line.t;
-        div.style.animationDelay = (i * 0.08) + 's';
-        div.textContent = line.text;
-        term.appendChild(div);
-      });
-      
-      const cursor = document.createElement('span');
-      cursor.className = 'cursor';
-      term.appendChild(cursor);
-    });
-    
-    document.getElementById('wallet-export').addEventListener('click', () => {
-      const chain = document.getElementById('wallet-chain').value;
-      const maxCall = document.getElementById('wallet-max-call').value;
-      const maxDay = document.getElementById('wallet-max-day').value;
-      
-      const config = `import { Ap1ph3x } from 'ap1ph3x';
-
-const pay = new Ap1ph3x({
-  privateKey: process.env.PRIVATE_KEY,
-  chain: '${chain}',
-  maxPerCall: ${maxCall},
-  maxPerDay: ${maxDay},
-});`;
-      
-      navigator.clipboard?.writeText(config);
-      const term = document.getElementById('wallet-terminal');
-      const div = document.createElement('div');
-      div.className = 'term-line ok';
-      div.textContent = '✅ Config copied to clipboard!';
-      term.appendChild(div);
-    });
-    
-    // ═══ PAYMENT FLOW ═══
-    document.getElementById('pay-execute').addEventListener('click', async () => {
-      const url = document.getElementById('pay-url').value;
-      const method = document.getElementById('pay-method').value;
-      const protocol = document.getElementById('pay-protocol').value;
-      const amount = document.getElementById('pay-amount').value;
-      
-      const flowEl = document.getElementById('payment-flow');
-      const termEl = document.getElementById('payment-terminal');
-      flowEl.innerHTML = '';
-      termEl.innerHTML = '';
-      
-      const steps = [
-        { num: '1', title: 'Request', detail: `${method} ${url}`, status: 'pending' },
-        { num: '2', title: '402 Payment Required', detail: 'Server demands payment for access', status: 'pending' },
-        { num: '3', title: 'Parse challenge', detail: `Protocol: ${protocol === 'auto' ? 'x402 (auto-detected)' : protocol}`, status: 'pending' },
-        { num: '4', title: 'Sign EIP-712', detail: `Amount: ${amount} USDC → signing with wallet key...`, status: 'pending' },
-        { num: '5', title: 'Retry with payment', detail: `Authorization: EIP-712 signature attached`, status: 'pending' },
-        { num: '6', title: '200 OK', detail: `Payment settled — ${amount} USDC transferred`, status: 'pending' },
-      ];
-      
-      for (let i = 0; i < steps.length; i++) {
-        const step = steps[i];
-        const div = document.createElement('div');
-        div.className = `flow-step ${step.status}`;
-        div.style.animationDelay = (i * 0.1) + 's';
-        div.innerHTML = `
-          <div class="num">${step.num}</div>
-          <div class="content">
-            <div class="title">${step.title}</div>
-            <div class="detail">${step.detail}</div>
-          </div>
-        `;
-        flowEl.appendChild(div);
-        
-        await new Promise(r => setTimeout(r, 500));
-        div.classList.remove('pending');
-        div.classList.add('success');
-        
-        // Terminal output
-        const termLine = document.createElement('div');
-        termLine.className = 'term-line';
-        termLine.style.animationDelay = '0s';
-        if (i === 0) termLine.classList.add('prompt');
-        else if (i === 1) termLine.classList.add('warn');
-        else if (i === 5) termLine.classList.add('ok');
-        else termLine.classList.add('dim');
-        
-        const texts = [
-          `> ${method} ${url}`,
-          `⚠ 402 Payment Required`,
-          `> parsing challenge... protocol: ${protocol === 'auto' ? 'x402' : protocol}`,
-          `> signing EIP-712 TransferWithAuthorization...`,
-          `> retry with payment header...`,
-          `✅ 200 OK — payment settled (${amount} USDC)`,
-        ];
-        termLine.textContent = texts[i];
-        termEl.appendChild(termLine);
+      for (const api of API_REGISTRY) {
+        let score = 0;
+        for (const kw of api.keywords) {
+          if (q.includes(kw)) score += kw.split(' ').length; // longer keywords score higher
+        }
+        if (score > bestScore) {
+          bestScore = score;
+          best = api;
+        }
       }
       
-      // Final terminal line
-      const finalLine = document.createElement('div');
-      finalLine.className = 'term-line ok';
-      finalLine.textContent = '';
-      termEl.appendChild(finalLine);
-      
-      const summary = document.createElement('div');
-      summary.className = 'term-line ok';
-      summary.textContent = `═══ Payment complete ═══`;
-      termEl.appendChild(summary);
-      
-      const detail = document.createElement('div');
-      detail.className = 'term-line dim';
-      detail.textContent = `   Amount: ${amount} USDC | Protocol: ${protocol === 'auto' ? 'x402' : protocol} | Status: SETTLED`;
-      termEl.appendChild(detail);
-    });
+      return best;
+    }
     
-    // ═══ STATS ═══
-    function renderStats() {
-      const grid = document.getElementById('stats-grid');
-      const stats = [
-        { num: '1779', label: 'Total APIs' },
-        { num: '739', label: 'Free APIs' },
-        { num: '53', label: 'Categories' },
-        { num: '6', label: 'Chains' },
-        { num: '2', label: 'Protocols' },
-        { num: '78', label: 'Open Source' },
-        { num: '149', label: 'OAuth APIs' },
-        { num: '200', label: 'AI Agents' },
-      ];
-      
-      grid.innerHTML = '';
-      stats.forEach(s => {
-        const card = document.createElement('div');
-        card.className = 'stat-card';
-        card.innerHTML = `<div class="num">${s.num}</div><div class="label">${s.label}</div>`;
-        grid.appendChild(card);
-      });
-      
-      // Categories
-      const catList = document.getElementById('cat-list');
-      const catCounts = {};
-      APIS.forEach(a => { catCounts[a.category] = (catCounts[a.category] || 0) + 1; });
-      
-      const sortedCats = Object.entries(catCounts).sort((a, b) => b[1] - a[1]);
-      catList.innerHTML = '';
-      sortedCats.forEach(([cat, count]) => {
-        const item = document.createElement('div');
-        item.className = 'cat-item';
-        item.innerHTML = `<span>${cat}</span><span class="count">${count}</span>`;
-        item.addEventListener('click', () => {
-          document.querySelector('.tab[data-tab="registry"]').click();
-          document.getElementById('category-filter').value = cat;
-          filterApis();
-        });
-        catList.appendChild(item);
+    function addMsg(text, isUser = false) {
+      const chat = document.getElementById('chat');
+      const msg = document.createElement('div');
+      msg.className = isUser ? 'msg msg-user' : 'msg msg-agent';
+      if (isUser) {
+        msg.innerHTML = `<div class="bubble">${text}</div>`;
+      } else {
+        msg.innerHTML = `<div class="who">ap1ph3x agent</div><div class="bubble">${text}</div>`;
+      }
+      chat.appendChild(msg);
+      chat.scrollTop = chat.scrollHeight;
+      return msg;
+    }
+    
+    function addStep(type, icon, label, detail, delay = 0) {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          const chat = document.getElementById('chat');
+          const lastMsg = chat.lastElementChild;
+          const bubble = lastMsg.querySelector('.bubble');
+          
+          const step = document.createElement('div');
+          step.className = `agent-step ${type}`;
+          step.innerHTML = `<div class="icon">${icon}</div><div class="text"><div class="label">${label}</div><div class="detail">${detail}</div></div>`;
+          bubble.appendChild(step);
+          chat.scrollTop = chat.scrollHeight;
+          resolve();
+        }, delay);
       });
     }
     
-    // ═══ INIT ═══
-    renderApis();
-    renderStats();
+    function addTerminal(text, cls = 'dim') {
+      const term = document.getElementById('terminal');
+      term.classList.add('visible');
+      const line = document.createElement('div');
+      line.className = `term-line ${cls}`;
+      line.textContent = text;
+      term.appendChild(line);
+      term.scrollTop = term.scrollHeight;
+    }
+    
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+    
+    // Generate mock EIP-712 signature
+    function mockSignature() {
+      return '0x' + Array.from({ length: 130 }, () => '0123456789abcdef'[Math.floor(Math.random() * 16)]).join('');
+    }
+    
+    // Generate mock tx hash
+    function mockTxHash() {
+      return '0x' + Array.from({ length: 64 }, () => '0123456789abcdef'[Math.floor(Math.random() * 16)]).join('');
+    }
+    
+    async function executeAgent(query) {
+      const input = document.getElementById('input');
+      const sendBtn = document.getElementById('send');
+      input.disabled = true;
+      sendBtn.disabled = true;
+      
+      // Add user message
+      addMsg(query, true);
+      
+      // Add agent message container
+      addMsg('');
+      const chat = document.getElementById('chat');
+      const bubble = chat.lastElementChild.querySelector('.bubble');
+      
+      // Step 1: Think
+      await sleep(200);
+      bubble.innerHTML = '<span class="thinking">Analyzing request</span>';
+      await sleep(800);
+      bubble.innerHTML = '';
+      
+      // Step 2: Find API
+      const api = findAPI(query);
+      
+      if (!api) {
+        await addStep('error', '❌', 'No matching API found', `Query "${query}" did not match any of the 1779 APIs in the registry`);
+        bubble.innerHTML += `<br><br>I couldn't find an API for that. Try: Bitcoin price, cat facts, weather, Hacker News, DeFi TVL, dog image...`;
+        input.disabled = false;
+        sendBtn.disabled = false;
+        input.value = '';
+        input.focus();
+        return;
+      }
+      
+      // Step 2: Found API
+      await addStep('search', '🔍', `Found API: ${api.name}`, `Category: ${api.category} | Auth: ${api.authMethod} | URL: ${api.url}`);
+      addTerminal(`> registry.search("${query}")`, 'prompt');
+      addTerminal(`  → matched: ${api.name} (score: ${api.keywords.filter(k => query.toLowerCase().includes(k)).length})`, 'ok');
+      await sleep(400);
+      
+      // Step 3: Check if payment needed
+      const url = api.buildUrl(query);
+      
+      if (api.paid) {
+        // ═══ PAID FLOW — x402 or MPP ═══
+        await addStep('pay', '💳', `402 Payment Required`, `Server demands payment: ${api.cost} USDC via ${api.authMethod.toUpperCase()}`);
+        addTerminal(`> ${url}`, 'prompt');
+        addTerminal(`⚠ 402 Payment Required — ${api.cost} USDC (${api.authMethod})`, 'warn');
+        await sleep(600);
+        
+        // Step 4: Check spend cap
+        await addStep('sign', '✍️', `Signing EIP-712 payment`, `Amount: ${api.cost} USDC | Chain: Base (8453) | Protocol: ${api.authMethod}`);
+        addTerminal(`> checking spend cap: ${api.cost} ≤ $0.01/call...`, 'dim');
+        await sleep(400);
+        
+        if (api.cost > 0.01) {
+          await addStep('error', '❌', `Spend cap exceeded`, `${api.cost} USDC > $0.01/call cap — payment BLOCKED`);
+          addTerminal(`❌ Spend cap exceeded — payment blocked`, 'err');
+          bubble.innerHTML += `<br><br>⚠ Payment blocked: the API costs ${api.cost} USDC but the spend cap is $0.01/call. Increase the cap to use this endpoint.`;
+          input.disabled = false;
+          sendBtn.disabled = false;
+          input.value = '';
+          input.focus();
+          return;
+        }
+        
+        addTerminal(`✅ Within spend cap`, 'ok');
+        await sleep(300);
+        
+        // Step 5: Sign
+        const sig = mockSignature();
+        await addStep('sign', '🔑', `EIP-712 signature generated`, `sig: ${sig.slice(0, 20)}...${sig.slice(-8)}`);
+        addTerminal(`> signEIP712({ amount: ${api.cost}, recipient: merchant })`, 'prompt');
+        addTerminal(`  → sig: ${sig.slice(0, 42)}...`, 'ok');
+        await sleep(500);
+        
+        // Step 6: Retry with payment
+        await addStep('fetch', '📡', `Retrying with payment`, `Authorization: EIP-712 signature attached`);
+        addTerminal(`> retry ${url} with payment header`, 'prompt');
+        await sleep(600);
+        
+      } else {
+        // ═══ FREE FLOW — no payment ═══
+        await addStep('fetch', '📡', `Fetching (free API)`, `No payment needed — authMethod: none`);
+        addTerminal(`> GET ${url}`, 'prompt');
+        addTerminal(`  → free API, no payment required`, 'ok');
+        await sleep(400);
+      }
+      
+      // Step 7: Fetch data
+      try {
+        const res = await fetch(url);
+        const status = res.status;
+        
+        if (status !== 200) {
+          await addStep('error', '❌', `HTTP ${status}`, `Request failed`);
+          addTerminal(`❌ HTTP ${status}`, 'err');
+          bubble.innerHTML += `<br><br>Request failed with status ${status}.`;
+          input.disabled = false;
+          sendBtn.disabled = false;
+          input.value = '';
+          input.focus();
+          return;
+        }
+        
+        const data = await res.json();
+        await addStep('done', '✅', `200 OK — Data received`, `Status: ${status} | Size: ${JSON.stringify(data).length} bytes`);
+        addTerminal(`✅ 200 OK — ${JSON.stringify(data).length} bytes received`, 'ok');
+        await sleep(400);
+        
+        // Step 8: Parse and display
+        const parsed = await api.parse(data, query);
+        
+        // Build result card
+        const card = document.createElement('div');
+        card.className = 'result-card';
+        
+        let receiptHtml = '';
+        if (api.paid) {
+          const txHash = mockTxHash();
+          receiptHtml = `
+            <div class="payment-receipt">
+              <div class="receipt-item"><span>💸 Paid:</span><span>${api.cost} USDC</span></div>
+              <div class="receipt-item"><span>🔗 Protocol:</span><span>${api.authMethod.toUpperCase()}</span></div>
+              <div class="receipt-item"><span>⛓️ Chain:</span><span>Base (8453)</span></div>
+              <div class="receipt-item"><span>📝 TX:</span><span>${txHash.slice(0, 18)}...</span></div>
+              <div class="receipt-item"><span>✅ Status:</span><span>SETTLED</span></div>
+            </div>`;
+        } else {
+          receiptHtml = `
+            <div class="payment-receipt">
+              <div class="receipt-item"><span>💸 Cost:</span><span>FREE</span></div>
+              <div class="receipt-item"><span>🔑 Auth:</span><span>none</span></div>
+              <div class="receipt-item"><span>📦 API:</span><span>${api.name}</span></div>
+              <div class="receipt-item"><span>📊 Category:</span><span>${api.category}</span></div>
+            </div>`;
+        }
+        
+        card.innerHTML = `
+          <div class="result-header">📡 Result from ${api.name}</div>
+          <div class="result-data">${parsed}</div>
+          ${receiptHtml}
+        `;
+        
+        bubble.appendChild(card);
+        chat.scrollTop = chat.scrollHeight;
+        
+        addTerminal(`> agent.respond()`, 'prompt');
+        addTerminal(`✅ Response delivered to user`, 'ok');
+        
+      } catch (err) {
+        await addStep('error', '❌', `Fetch error`, err.message);
+        addTerminal(`❌ ${err.message}`, 'err');
+        bubble.innerHTML += `<br><br>Network error: ${err.message}`;
+      }
+      
+      // Re-enable input
+      input.disabled = false;
+      sendBtn.disabled = false;
+      input.value = '';
+      input.focus();
+    }
+    
+    // ═══ EVENT LISTENERS ═══
+    document.getElementById('send').addEventListener('click', () => {
+      const q = document.getElementById('input').value.trim();
+      if (q) executeAgent(q);
+    });
+    
+    document.getElementById('input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const q = document.getElementById('input').value.trim();
+        if (q) executeAgent(q);
+      }
+    });
+    
+    document.querySelectorAll('.suggestion').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById('input').value = btn.dataset.q;
+        executeAgent(btn.dataset.q);
+      });
+    });
+    
+    // Focus input on load
+    document.getElementById('input').focus();
   </script>
 </body>
 </html>
