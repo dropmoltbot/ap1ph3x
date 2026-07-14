@@ -1,5 +1,5 @@
 /**
- * AgentPay — Unified payment client for AI agents
+ * Ap1ph3 — Unified payment client for AI agents
  * 
  * Automatically detects the payment protocol (x402 or MPP)
  * and handles the full payment flow:
@@ -11,9 +11,9 @@
  * 
  * @example
  * ```typescript
- * import { AgentPay } from 'agentpay';
+ * import { Ap1ph3 } from 'ap1ph3';
  * 
- * const pay = new AgentPay({
+ * const pay = new Ap1ph3({
  *   privateKey: process.env.PRIVATE_KEY as `0x${string}`,
  *   chain: 'base',
  * });
@@ -31,7 +31,7 @@ import { type ChainConfig } from './chains.js';
 
 export type PaymentProtocol = 'x402' | 'mpp';
 
-export interface AgentPayConfig extends WalletConfig {
+export interface Ap1ph3Config extends WalletConfig {
   /** Default protocol preference when both are available */
   defaultProtocol?: PaymentProtocol;
   /** Max spend per call (USDC, human-readable). Calls above this are rejected. */
@@ -52,7 +52,7 @@ export interface PayResult {
   response: Response;
 }
 
-export class AgentPay {
+export class Ap1ph3 {
   private wallet: Wallet;
   private x402: X402Client;
   private mpp: MPPClient;
@@ -63,7 +63,7 @@ export class AgentPay {
   private dailyResetAt: number = 0;
   private timeout: number;
 
-  constructor(config: AgentPayConfig) {
+  constructor(config: Ap1ph3Config) {
     this.wallet = new Wallet(config);
     this.x402 = new X402Client(this.wallet);
     this.mpp = new MPPClient(this.wallet);

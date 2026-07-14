@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /**
- * AgentPay CLI — Command-line tool for testing paid API calls
+ * Ap1ph3 CLI — Command-line tool for testing paid API calls
  * 
  * Usage:
- *   agentpay fetch <url> [--method GET|POST] [--body json] [--chain base] [--protocol x402|mpp]
- *   agentpay wallet [--chain base]
- *   agentpay test
+ *   ap1ph3 fetch <url> [--method GET|POST] [--body json] [--chain base] [--protocol x402|mpp]
+ *   ap1ph3 wallet [--chain base]
+ *   ap1ph3 test
  */
 
-import { AgentPay } from './agentpay.js';
+import { Ap1ph3 } from './ap1ph3.js';
 
 const args = process.argv.slice(2);
 const command = args[0];
@@ -47,13 +47,13 @@ async function main() {
 
 function printHelp() {
   console.log(`
-  AgentPay — Open-source payment client for AI agents
+  Ap1ph3 — Open-source payment client for AI agents
 
   Usage:
-    agentpay fetch <url> [options]    Make a paid API call
-    agentpay wallet                    Show wallet info
-    agentpay test                      Run self-test
-    agentpay help                      Show this help
+    ap1ph3 fetch <url> [options]    Make a paid API call
+    ap1ph3 wallet                    Show wallet info
+    ap1ph3 test                      Run self-test
+    ap1ph3 help                      Show this help
 
   Options for fetch:
     --method <GET|POST|PUT|DELETE>     HTTP method (default: GET)
@@ -67,10 +67,10 @@ function printHelp() {
     PRIVATE_KEY                        EVM private key (0x...)
     
   Examples:
-    agentpay fetch https://api.example.com/data
-    agentpay fetch https://api.example.com/search --method POST --body '{"q":"test"}'
-    agentpay fetch https://api.example.com/data --protocol mpp
-    agentpay wallet
+    ap1ph3 fetch https://api.example.com/data
+    ap1ph3 fetch https://api.example.com/search --method POST --body '{"q":"test"}'
+    ap1ph3 fetch https://api.example.com/data --protocol mpp
+    ap1ph3 wallet
   `);
 }
 
@@ -83,7 +83,7 @@ async function cmdFetch(args: string[]) {
 
   const url = args[0];
   if (!url) {
-    console.error('❌ URL required: agentpay fetch <url>');
+    console.error('❌ URL required: ap1ph3 fetch <url>');
     process.exit(1);
   }
 
@@ -99,7 +99,7 @@ async function cmdFetch(args: string[]) {
     }
   }
 
-  const pay = new AgentPay({
+  const pay = new Ap1ph3({
     privateKey: privateKey as `0x${string}`,
     chain: options.chain || 'base',
     defaultProtocol: options.preferProtocol || 'x402',
@@ -107,7 +107,7 @@ async function cmdFetch(args: string[]) {
     maxPerDay: options.maxPerDay,
   });
 
-  console.log(`🤖 AgentPay — fetching ${url}`);
+  console.log(`🤖 Ap1ph3 — fetching ${url}`);
   console.log(`   Chain: ${pay.chainConfig.name} (${pay.chainConfig.chainId})`);
   console.log(`   Wallet: ${pay.address}`);
   console.log(`   Protocol: ${options.preferProtocol || 'x402'}`);
@@ -155,7 +155,7 @@ function cmdWallet() {
     process.exit(1);
   }
 
-  const pay = new AgentPay({
+  const pay = new Ap1ph3({
     privateKey: privateKey as `0x${string}`,
     chain: 'base',
   });
@@ -167,12 +167,12 @@ function cmdWallet() {
 }
 
 async function cmdTest() {
-  console.log('AgentPay self-test');
+  console.log('Ap1ph3 self-test');
   console.log('');
 
   // Test 1: Wallet creation
   try {
-    const pay = new AgentPay({
+    const pay = new Ap1ph3({
       privateKey: '0x' + '1'.repeat(64) as `0x${string}`,
       chain: 'base',
     });
@@ -185,7 +185,7 @@ async function cmdTest() {
 
   // Test 2: Invalid key rejection
   try {
-    new AgentPay({ privateKey: '0x123' as `0x${string}` });
+    new Ap1ph3({ privateKey: '0x123' as `0x${string}` });
     console.log('❌ Invalid key rejection: FAILED (should have thrown)');
   } catch {
     console.log('✅ Invalid key rejection: OK');
@@ -193,7 +193,7 @@ async function cmdTest() {
 
   // Test 3: Free endpoint (no payment needed)
   try {
-    const pay = new AgentPay({
+    const pay = new Ap1ph3({
       privateKey: '0x' + '1'.repeat(64) as `0x${string}`,
       chain: 'base',
     });

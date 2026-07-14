@@ -1,12 +1,12 @@
 {
-  "name": "@dropxtor/agentpay",
+  "name": "ap1ph3",
   "version": "0.1.0",
-  "description": "Open-source payment client for AI agents — x402 + MPP, multi-chain, zero custody. 30+ public API registry included.",
+  "description": "\ud83d\udd10 Chiffrement + cybercrypto payment client for AI agents. x402 + MPP, multi-chain, zero custody. 31+ API registry.",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "agentpay": "dist/cli.js"
+    "ap1ph3": "./dist/cli.js"
   },
   "scripts": {
     "build": "tsc",
@@ -15,27 +15,27 @@
     "prepublishOnly": "npm run build"
   },
   "keywords": [
+    "payment",
     "x402",
     "mpp",
     "ai-agent",
-    "payments",
-    "usdc",
+    "crypto",
+    "cypher",
+    "cipher",
+    "ethereum",
     "base",
-    "tempo",
-    "eip-712",
+    "machine-payments",
     "open-source",
-    "privacy",
-    "autonomous",
-    "http-402",
-    "machine-payments"
+    "zero-custody",
+    "ap1ph3"
   ],
   "license": "MIT",
   "author": "dropxtor <dropxtor@proton.me>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dropxtor/agentpay"
+    "url": "https://github.com/dropmoltbot/agentpay.git"
   },
-  "homepage": "https://github.com/dropxtor/agentpay",
+  "homepage": "https://github.com/dropxtor/ap1ph3",
   "engines": {
     "node": ">=18"
   },

@@ -1,13 +1,13 @@
 /**
- * AgentPay — Open-source payment client for AI agents
+ * Ap1ph3 — Open-source payment client for AI agents
  * 
  * Zero-custody, multi-protocol (x402 + MPP), multi-chain.
  * No proprietary SDK lock-in. No custodial wallets. No API keys.
  * 
- * @module agentpay
+ * @module ap1ph3
  */
 
-export { AgentPay, type AgentPayConfig, type PayResult, type PaymentProtocol } from './agentpay.js';
+export { Ap1ph3, type Ap1ph3Config, type PayResult, type PaymentProtocol } from './ap1ph3.js';
 export { X402Client, type X402Challenge, type X402Payment } from './x402.js';
 export { MPPClient, type MPPChallenge, type MPPPayment } from './mpp.js';
 export { Wallet, type WalletConfig } from './wallet.js';
