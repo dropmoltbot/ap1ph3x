@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24">
+  <defs>
+    <filter id="glow-alert"><feGaussianBlur stdDeviation="1.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <g filter="url(#glow-alert)" fill="none" stroke="#ff4040" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Triangle -->
+    <path d="M12 3L22 21H2L12 3z" fill="#ff4040" fill-opacity="0.05">
+      <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="1.5s" repeatCount="indefinite"/>
+      <animate attributeName="fill-opacity" values="0.02;0.15;0.02" dur="1.5s" repeatCount="indefinite"/>
+    </path>
+    <!-- Exclamation -->
+    <line x1="12" y1="9" x2="12" y2="14" stroke="#ff4040" stroke-width="2.5">
+      <animate attributeName="stroke-opacity" values="0.3;1;0.3" dur="1s" repeatCount="indefinite"/>
+    </line>
+    <circle cx="12" cy="18" r="1.2" fill="#ff4040">
+      <animate attributeName="fill-opacity" values="0.3;1;0.3" dur="1s" repeatCount="indefinite"/>
+    </circle>
+    <!-- Pulse ring -->
+    <path d="M12 3L22 21H2L12 3z" fill="none" stroke="#ff4040" stroke-width="0.5" opacity="0.3">
+      <animate attributeName="stroke-width" values="0.5;2;0.5" dur="1.5s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-opacity" values="0.4;0;0.4" dur="1.5s" repeatCount="indefinite"/>
+    </path>
+  </g>
+</svg>

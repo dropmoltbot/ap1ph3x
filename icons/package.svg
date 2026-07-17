@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24">
+  <defs>
+    <filter id="glow-pkg"><feGaussianBlur stdDeviation="1" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <g filter="url(#glow-pkg)" fill="none" stroke="#00ff41" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Box top -->
+    <path d="M12 2L2 7v10l10 5l10-5V7L12 2z">
+      <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="2s" repeatCount="indefinite"/>
+    </path>
+    <!-- Box faces -->
+    <path d="M2 7l10 5m0 0v10m0-10l10-5">
+      <animate attributeName="stroke-opacity" values="0.3;0.8;0.3" dur="2s" repeatCount="indefinite"/>
+    </path>
+    <!-- Tape line -->
+    <line x1="12" y1="7" x2="12" y2="12" stroke="#f6851b" stroke-width="1.5">
+      <animate attributeName="stroke-opacity" values="0.2;1;0.2" dur="2s" repeatCount="indefinite"/>
+    </line>
+    <line x1="2" y1="7" x2="22" y2="7" stroke="#f6851b" stroke-width="0.8" opacity="0.3">
+      <animate attributeName="stroke-opacity" values="0.1;0.5;0.1" dur="2s" repeatCount="indefinite"/>
+    </line>
+    <!-- Scan pulse -->
+    <line x1="3" y1="14" x2="21" y2="14" stroke="#00ff41" stroke-width="0.5" opacity="0.5">
+      <animate attributeName="y1" values="8;22;8" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="8;22;8" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-opacity" values="0;0.8;0" dur="3s" repeatCount="indefinite"/>
+    </line>
+  </g>
+</svg>

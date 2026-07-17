@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24">
+  <defs>
+    <filter id="glow-check"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <g filter="url(#glow-check)" fill="none" stroke="#00ff41" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Circle -->
+    <circle cx="12" cy="12" r="10" fill="none" stroke-width="2">
+      <animate attributeName="stroke-opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <!-- Checkmark draw animation -->
+    <path d="M7 12l3.5 3.5L17 8" fill="none">
+      <animate attributeName="stroke-opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-dasharray" values="0 20;20 0" dur="1.5s" repeatCount="indefinite"/>
+    </path>
+    <!-- Pulse ring -->
+    <circle cx="12" cy="12" r="10" fill="none" stroke="#00ff41" stroke-width="0.5" opacity="0.3">
+      <animate attributeName="r" values="10;14;10" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-opacity" values="0.4;0;0.4" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <!-- Sparkles -->
+    <circle cx="5" cy="5" r="0.6" fill="#00ff41">
+      <animate attributeName="fill-opacity" values="0;1;0" dur="1.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="19" cy="6" r="0.6" fill="#f6851b">
+      <animate attributeName="fill-opacity" values="0;0.8;0" dur="1.8s" repeatCount="indefinite" begin="0.5s"/>
+    </circle>
+  </g>
+</svg>
