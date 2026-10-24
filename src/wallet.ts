@@ -47,6 +47,9 @@ export class Wallet {
     this.address = deriveAddress(this.privateKey);
 
     const chainKey = config.chain || 'base';
+    if (!config.chainConfig && !DEFAULT_CHAINS[chainKey]) {
+      throw new Error(`Unknown chain '${chainKey}'. Known: ${Object.keys(DEFAULT_CHAINS).join(', ')} (or pass chainConfig)`);
+    }
     this.chain = config.chainConfig || DEFAULT_CHAINS[chainKey] || DEFAULT_CHAINS.base;
   }
 

@@ -1,6 +1,6 @@
 {
   "name": "ap1ph3x",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "\ud83d\udd10 Chiffrement + cybercrypto payment client for AI agents. x402 + MPP, multi-chain, zero custody. 1779+ API registry across 53 categories.",
   "type": "module",
   "main": "dist/index.js",
